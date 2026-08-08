@@ -1,0 +1,41 @@
+[
+  {
+    "nama_barang": "Mesin pendingin kecil",
+    "bentuk_barang": "kotak",
+    "panjang": 60,
+    "lebar": 45,
+    "tinggi": 55,
+    "berat": 38.5,
+    "quantity": 2,
+    "kategori": "elektronik",
+    "is_fragile": true,
+    "butuh_pendingin": false,
+    "orientable": true
+  },
+  {
+    "nama_barang": "Pallet karton minuman",
+    "bentuk_barang": "kotak",
+    "panjang": 120,
+    "lebar": 100,
+    "tinggi": 140,
+    "berat": 220.0,
+    "quantity": 1,
+    "kategori": "fmcg",
+    "is_fragile": false,
+    "butuh_pendingin": false,
+    "orientable": false
+  },
+  {
+    "nama_barang": "Tabung gas industri",
+    "bentuk_barang": "silinder",
+    "panjang": 80,
+    "lebar": 80,
+    "tinggi": 150,
+    "berat": 95.0,
+    "quantity": 4,
+    "kategori": "industri",
+    "is_fragile": false,
+    "butuh_pendingin": false,
+    "orientable": false
+  }
+]
