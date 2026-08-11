@@ -24,39 +24,6 @@ dalam kontainer / mobil box / truck, dengan 6 alur kerja:
 - Format data QR: JSON ringkas `{n, p, l, t, b, q, s}` (nama, panjang, lebar, tinggi, berat, quantity, stackable), dengan fallback format teks `nama|panjang|lebar|tinggi|berat|quantity|stackable` untuk label yang ditulis manual.
 - Modul scanner (`html5-qrcode`) di-lazy-load — hanya diunduh browser saat dialog Scan QR pertama kali dibuka, supaya tidak membebani waktu muat awal halaman.
 
-## Stack
-
-- Vite + React 19 + TypeScript
-- Tailwind CSS v4 + komponen UI ala shadcn (buatan sendiri, tanpa CLI)
-- lucide-react untuk ikon
-- @react-three/fiber + drei untuk visualisasi 3D
-- papaparse untuk import CSV
-- html5-qrcode untuk scan QR (kamera & upload gambar), qrcode untuk generate label QR
-- ESLint (flat config) untuk linting
-- State disimpan di `localStorage` (React Context + persist murah) — siap diganti ke PostgreSQL + FastAPI saat backend tersedia
-
-## Menjalankan
-
-```bash
-npm install
-npm run dev
-```
-
-Buka `http://localhost:5173`.
-
-## Build produksi
-
-```bash
-npm run build
-npm run preview
-```
-
-## Lint
-
-```bash
-npm run lint
-```
-
 ## Struktur folder
 
 ```
@@ -68,16 +35,3 @@ src/
   components/layout/ Header, StepNav
   components/steps/  Step1Karoseri ... Step6Visualisasi
 ```
-
-## Menghubungkan ke backend (langkah selanjutnya)
-
-Saat FastAPI + PostgreSQL siap, ganti implementasi di `AppDataContext.tsx`:
-setiap fungsi `add*/remove*/update*` tinggal diarahkan ke pemanggilan API
-(`fetch`/`axios`) alih-alih `setState` lokal, lalu data awal (`karoseriList`,
-dst.) diambil lewat `useEffect` + endpoint `GET`. Struktur data (`src/types`)
-sudah dirancang agar sesuai dengan kemungkinan skema tabel PostgreSQL
-(`karoseri`, `armada`, `pengiriman`, `barang`).
-
-Untuk step 5 (Rekomendasi AI), fungsi `buildMockRecommendations` di
-`Step5Rekomendasi.tsx` bisa digantikan pemanggilan endpoint AI yang
-mengembalikan bentuk data `RekomendasiArmada[]` (lihat `src/types/index.ts`).
