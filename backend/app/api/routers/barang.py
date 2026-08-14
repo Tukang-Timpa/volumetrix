@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
@@ -18,8 +18,14 @@ def create_barang(barang: Barang, session: Session = Depends(get_session)):
 
 
 @router.get("/", response_model=List[Barang])
-def list_barang(session: Session = Depends(get_session)):
-    return session.exec(select(Barang)).all()
+def list_barang(
+    pengiriman_id: Optional[int] = None,
+    session: Session = Depends(get_session),
+):
+    query = select(Barang)
+    if pengiriman_id is not None:
+        query = query.where(Barang.pengiriman_id == pengiriman_id)
+    return session.exec(query).all()
 
 
 @router.get("/{barang_id}", response_model=Barang)

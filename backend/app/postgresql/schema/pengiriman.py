@@ -6,7 +6,10 @@ from sqlmodel import SQLModel, Field
 class Pengiriman(SQLModel, table=True):
     __tablename__ = "pengiriman"
 
+    # Identifier
     id: Optional[int] = Field(default=None, primary_key=True)
+    parent_id: Optional[int] = Field(default=None, foreign_key="pengiriman.id")
+
     kode_pengiriman: str = Field(index=True, unique=True)
     armada_id: Optional[int] = Field(default=None, foreign_key="armada.id")
 
@@ -35,6 +38,6 @@ class Barang(SQLModel, table=True):
     quantity: int = Field(default=1)
 
     kategori: Optional[str] = None
-    is_fragile: bool = Field(default=False)
+    fragility_level: int = Field(default=1)
     butuh_pendingin: bool = Field(default=False)
     orientable: bool = Field(default=False)

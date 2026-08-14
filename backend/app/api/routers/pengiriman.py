@@ -8,7 +8,6 @@ from app.postgresql.schema.pengiriman import Pengiriman
 
 router = APIRouter(prefix="/pengiriman", tags=["pengiriman"])
 
-
 @router.post("/", response_model=Pengiriman)
 def create_pengiriman(pengiriman: Pengiriman, session: Session = Depends(get_session)):
     session.add(pengiriman)

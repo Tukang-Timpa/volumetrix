@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
 from app.postgresql.database import get_session
-from app.postgresql.schema.armada import Karoseri
+from app.postgresql.schema.armada import Armada, Karoseri
 
 router = APIRouter(prefix="/karoseri", tags=["karoseri"])
 
@@ -51,5 +51,18 @@ def delete_karoseri(karoseri_id: int, session: Session = Depends(get_session)):
     karoseri = session.get(Karoseri, karoseri_id)
     if not karoseri:
         raise HTTPException(status_code=404, detail="Karoseri tidak ditemukan")
+
+    armada_terkait = session.exec(
+        select(Armada).where(Armada.karoseri_id == karoseri_id)
+    ).all()
+    if armada_terkait:
+        raise HTTPException(
+            status_code=409,
+            detail=(
+                f"Karoseri masih dipakai oleh {len(armada_terkait)} armada. "
+                "Lepaskan karoseri dari armada terlebih dahulu sebelum menghapus."
+            ),
+        )
+
     session.delete(karoseri)
     session.commit()
