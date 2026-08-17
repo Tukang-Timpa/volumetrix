@@ -9,4 +9,4 @@ python-multipart
 langchain-groq
 sqlmodel
 psycopg2-binary
-py3dbp
+git+https://github.com/jerry800416/3D-bin-packing.git

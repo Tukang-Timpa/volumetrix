@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED=1
 
 # Install system dependencies (compiler untuk library tertentu jika diperlukan)
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc python3-dev \
+    && apt-get install -y --no-install-recommends gcc python3-dev git \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements dan install
