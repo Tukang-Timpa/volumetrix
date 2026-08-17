@@ -17,19 +17,11 @@ class ItemPackingResult:
     muat: bool  # False if the item could not be placed
 
 
-# Expand items based on their quantity
-def _expand_item_by_quantity(daftar_barang: List[Barang]) -> List[Barang]:
-    expanded = []
-    for barang in daftar_barang:
-        for _ in range(barang.quantity):
-            expanded.append(barang)
-    return expanded
-
 
 def pack(
     armada: Armada,
     karoseri: Karoseri,
-    daftar_barang: List[Barang],
+    sorted_pairs: List[tuple],
 ) -> List[ItemPackingResult]:
     packer = Packer()
 
@@ -43,11 +35,6 @@ def pack(
         )
     )
 
-    expanded_item = _expand_item_by_quantity(daftar_barang)
-
-    constraints = build_constraints(expanded_item)
-    sorted_pairs = sort_packing(expanded_item, constraints)
-
     # Create a unique name for each item to map back to the original item ID after packing
     id_map = {}
     for idx, (barang, constraints) in enumerate(sorted_pairs):
@@ -59,19 +46,12 @@ def pack(
                 barang.panjang,
                 barang.lebar,
                 barang.tinggi,
-                barang.berat,
-                loadbear=constraints.loadbear,
-                level=constraints.level,
-                updown = not barang.orientable,
-                number_of_decimals=2
+                barang.berat
             )
         )
 
     packer.pack(
-        bigger_first=True,
-        check_stable=True,
-        support_surface_ratio=0.75,
-        fix_point=True,
+        bigger_first=True
     )
 
     results = []

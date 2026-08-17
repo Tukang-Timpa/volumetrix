@@ -9,3 +9,4 @@ python-multipart
 langchain-groq
 sqlmodel
 psycopg2
+py3dbp

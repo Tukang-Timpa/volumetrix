@@ -1,0 +1,857 @@
+[
+    {
+        "packing_sequence": 1,
+        "item_name": "Kulkas",
+        "physical_properties": {
+            "weight_kg": 128.0,
+            "dimensions_cm": "50.0x50.0x110.0",
+            "fragility": "fragile",
+            "orientable": false
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 30.32,
+            "loadbear_kg": 5.0,
+            "density_kg_dm3": 0.4655,
+            "footprint_cm2": 2500.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 2,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 3,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 4,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 5,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 6,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 7,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 8,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 9,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 10,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 11,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 12,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 13,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 14,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 15,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 16,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 17,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 18,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 19,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 20,
+        "item_name": "Galon",
+        "physical_properties": {
+            "weight_kg": 34.0,
+            "dimensions_cm": "30.0x30.0x50.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 23.53,
+            "loadbear_kg": 136.0,
+            "density_kg_dm3": 0.7556,
+            "footprint_cm2": 1500.0,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 21,
+        "item_name": "Kursi",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x50.0x70.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 6.7,
+            "loadbear_kg": 12.5,
+            "density_kg_dm3": 0.0357,
+            "footprint_cm2": 3500.0,
+            "support_ratio": 0.75
+        }
+    },
+    {
+        "packing_sequence": 22,
+        "item_name": "Kursi",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x50.0x70.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 6.7,
+            "loadbear_kg": 12.5,
+            "density_kg_dm3": 0.0357,
+            "footprint_cm2": 3500.0,
+            "support_ratio": 0.75
+        }
+    },
+    {
+        "packing_sequence": 23,
+        "item_name": "Kursi",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x50.0x70.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 6.7,
+            "loadbear_kg": 12.5,
+            "density_kg_dm3": 0.0357,
+            "footprint_cm2": 3500.0,
+            "support_ratio": 0.75
+        }
+    },
+    {
+        "packing_sequence": 24,
+        "item_name": "Kursi",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x50.0x70.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 6.7,
+            "loadbear_kg": 12.5,
+            "density_kg_dm3": 0.0357,
+            "footprint_cm2": 3500.0,
+            "support_ratio": 0.75
+        }
+    },
+    {
+        "packing_sequence": 25,
+        "item_name": "Kursi",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x50.0x70.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 6.7,
+            "loadbear_kg": 12.5,
+            "density_kg_dm3": 0.0357,
+            "footprint_cm2": 3500.0,
+            "support_ratio": 0.75
+        }
+    },
+    {
+        "packing_sequence": 26,
+        "item_name": "Kursi",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x50.0x70.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 6.7,
+            "loadbear_kg": 12.5,
+            "density_kg_dm3": 0.0357,
+            "footprint_cm2": 3500.0,
+            "support_ratio": 0.75
+        }
+    },
+    {
+        "packing_sequence": 27,
+        "item_name": "Kursi",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x50.0x70.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 6.7,
+            "loadbear_kg": 12.5,
+            "density_kg_dm3": 0.0357,
+            "footprint_cm2": 3500.0,
+            "support_ratio": 0.75
+        }
+    },
+    {
+        "packing_sequence": 28,
+        "item_name": "Kursi",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x50.0x70.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 6.7,
+            "loadbear_kg": 12.5,
+            "density_kg_dm3": 0.0357,
+            "footprint_cm2": 3500.0,
+            "support_ratio": 0.75
+        }
+    },
+    {
+        "packing_sequence": 29,
+        "item_name": "Kursi",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x50.0x70.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 6.7,
+            "loadbear_kg": 12.5,
+            "density_kg_dm3": 0.0357,
+            "footprint_cm2": 3500.0,
+            "support_ratio": 0.75
+        }
+    },
+    {
+        "packing_sequence": 30,
+        "item_name": "Kursi",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x50.0x70.0",
+            "fragility": "normal",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 6.7,
+            "loadbear_kg": 12.5,
+            "density_kg_dm3": 0.0357,
+            "footprint_cm2": 3500.0,
+            "support_ratio": 0.75
+        }
+    },
+    {
+        "packing_sequence": 31,
+        "item_name": "Laptop",
+        "physical_properties": {
+            "weight_kg": 3.0,
+            "dimensions_cm": "30.0x21.0x8.0",
+            "fragility": "do_not_stack",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -69.33,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.5952,
+            "footprint_cm2": 630.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 32,
+        "item_name": "Laptop",
+        "physical_properties": {
+            "weight_kg": 3.0,
+            "dimensions_cm": "30.0x21.0x8.0",
+            "fragility": "do_not_stack",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -69.33,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.5952,
+            "footprint_cm2": 630.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 33,
+        "item_name": "Laptop",
+        "physical_properties": {
+            "weight_kg": 3.0,
+            "dimensions_cm": "30.0x21.0x8.0",
+            "fragility": "do_not_stack",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -69.33,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.5952,
+            "footprint_cm2": 630.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 34,
+        "item_name": "Laptop",
+        "physical_properties": {
+            "weight_kg": 3.0,
+            "dimensions_cm": "30.0x21.0x8.0",
+            "fragility": "do_not_stack",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -69.33,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.5952,
+            "footprint_cm2": 630.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 35,
+        "item_name": "Laptop",
+        "physical_properties": {
+            "weight_kg": 3.0,
+            "dimensions_cm": "30.0x21.0x8.0",
+            "fragility": "do_not_stack",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -69.33,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.5952,
+            "footprint_cm2": 630.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 36,
+        "item_name": "Laptop",
+        "physical_properties": {
+            "weight_kg": 3.0,
+            "dimensions_cm": "30.0x21.0x8.0",
+            "fragility": "do_not_stack",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -69.33,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.5952,
+            "footprint_cm2": 630.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 37,
+        "item_name": "Laptop",
+        "physical_properties": {
+            "weight_kg": 3.0,
+            "dimensions_cm": "30.0x21.0x8.0",
+            "fragility": "do_not_stack",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -69.33,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.5952,
+            "footprint_cm2": 630.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 38,
+        "item_name": "Laptop",
+        "physical_properties": {
+            "weight_kg": 3.0,
+            "dimensions_cm": "30.0x21.0x8.0",
+            "fragility": "do_not_stack",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -69.33,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.5952,
+            "footprint_cm2": 630.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 39,
+        "item_name": "Laptop",
+        "physical_properties": {
+            "weight_kg": 3.0,
+            "dimensions_cm": "30.0x21.0x8.0",
+            "fragility": "do_not_stack",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -69.33,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.5952,
+            "footprint_cm2": 630.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 40,
+        "item_name": "Laptop",
+        "physical_properties": {
+            "weight_kg": 3.0,
+            "dimensions_cm": "30.0x21.0x8.0",
+            "fragility": "do_not_stack",
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -69.33,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.5952,
+            "footprint_cm2": 630.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 41,
+        "item_name": "Aquarium",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x30.0x30.0",
+            "fragility": "do_not_stack",
+            "orientable": false
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -74.82,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.1389,
+            "footprint_cm2": 1200.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 42,
+        "item_name": "Aquarium",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x30.0x30.0",
+            "fragility": "do_not_stack",
+            "orientable": false
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -74.82,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.1389,
+            "footprint_cm2": 1200.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 43,
+        "item_name": "Aquarium",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x30.0x30.0",
+            "fragility": "do_not_stack",
+            "orientable": false
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -74.82,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.1389,
+            "footprint_cm2": 1200.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 44,
+        "item_name": "Aquarium",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x30.0x30.0",
+            "fragility": "do_not_stack",
+            "orientable": false
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -74.82,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.1389,
+            "footprint_cm2": 1200.0,
+            "support_ratio": 0.9
+        }
+    },
+    {
+        "packing_sequence": 45,
+        "item_name": "Aquarium",
+        "physical_properties": {
+            "weight_kg": 5.0,
+            "dimensions_cm": "40.0x30.0x30.0",
+            "fragility": "do_not_stack",
+            "orientable": false
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": -74.82,
+            "loadbear_kg": 0.0,
+            "density_kg_dm3": 0.1389,
+            "footprint_cm2": 1200.0,
+            "support_ratio": 0.9
+        }
+    }
+]

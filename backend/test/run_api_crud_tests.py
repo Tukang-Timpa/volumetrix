@@ -1,7 +1,7 @@
 from pathlib import Path
 import unittest
 
-from api_crud.common import PrintingTestRunner
+from test.api_crud.common import PrintingTestRunner
 
 
 def main() -> int:

@@ -38,6 +38,6 @@ class Barang(SQLModel, table=True):
     quantity: int = Field(default=1)
 
     kategori: Optional[str] = None
-    fragility_level: int = Field(default=1)
+    fragility_level: str = Field(default="normal")  # normal | fragile | do_not_stack
     butuh_pendingin: bool = Field(default=False)
     orientable: bool = Field(default=False)

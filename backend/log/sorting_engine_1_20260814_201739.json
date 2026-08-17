@@ -1,0 +1,192 @@
+[
+    {
+        "packing_sequence": 1,
+        "item_name": "Kasur Spring Bed",
+        "physical_properties": {
+            "weight_kg": 30,
+            "dimensions_cm": "200x160x25",
+            "fragility": 1,
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 1,
+            "position": "BOTTOM (Foundation)",
+            "base_score": 49.56,
+            "loadbear_kg": 12.5,
+            "density_kg_dm3": 0.0375,
+            "footprint_cm2": 32000,
+            "support_ratio": 0.75
+        }
+    },
+    {
+        "packing_sequence": 2,
+        "item_name": "Plat Baja 1m x 0.5m",
+        "physical_properties": {
+            "weight_kg": 40,
+            "dimensions_cm": "100x50x5",
+            "fragility": 1,
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 1,
+            "position": "BOTTOM (Foundation)",
+            "base_score": 42.67,
+            "loadbear_kg": 160.0,
+            "density_kg_dm3": 1.6,
+            "footprint_cm2": 5000,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 3,
+        "item_name": "Sak Semen 50kg",
+        "physical_properties": {
+            "weight_kg": 50,
+            "dimensions_cm": "60x40x15",
+            "fragility": 1,
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 1,
+            "position": "BOTTOM (Foundation)",
+            "base_score": 39.03,
+            "loadbear_kg": 200.0,
+            "density_kg_dm3": 1.3889,
+            "footprint_cm2": 2400,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 4,
+        "item_name": "Aki Motor 12V",
+        "physical_properties": {
+            "weight_kg": 10,
+            "dimensions_cm": "15x10x10",
+            "fragility": 1,
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 33.2,
+            "loadbear_kg": 40.0,
+            "density_kg_dm3": 6.6667,
+            "footprint_cm2": 150,
+            "support_ratio": 0.5
+        }
+    },
+    {
+        "packing_sequence": 5,
+        "item_name": "Kulkas 2 Pintu",
+        "physical_properties": {
+            "weight_kg": 75,
+            "dimensions_cm": "60x65x170",
+            "fragility": 1,
+            "orientable": false
+        },
+        "engine_calculations": {
+            "level": 2,
+            "position": "MIDDLE",
+            "base_score": 29.4,
+            "loadbear_kg": 20.0,
+            "density_kg_dm3": 0.1131,
+            "footprint_cm2": 3900,
+            "support_ratio": 0.7
+        }
+    },
+    {
+        "packing_sequence": 6,
+        "item_name": "Aquarium Kaca Besar",
+        "physical_properties": {
+            "weight_kg": 25,
+            "dimensions_cm": "90x40x50",
+            "fragility": 1,
+            "orientable": false
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 14.38,
+            "loadbear_kg": 20.0,
+            "density_kg_dm3": 0.1389,
+            "footprint_cm2": 3600,
+            "support_ratio": 0.7
+        }
+    },
+    {
+        "packing_sequence": 7,
+        "item_name": "TV LED 55 Inch",
+        "physical_properties": {
+            "weight_kg": 15,
+            "dimensions_cm": "125x12x75",
+            "fragility": 1,
+            "orientable": false
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 8.5,
+            "loadbear_kg": 20.0,
+            "density_kg_dm3": 0.1333,
+            "footprint_cm2": 1500,
+            "support_ratio": 0.7
+        }
+    },
+    {
+        "packing_sequence": 8,
+        "item_name": "Keyboard Mekanikal",
+        "physical_properties": {
+            "weight_kg": 1.2,
+            "dimensions_cm": "45x15x4",
+            "fragility": 1,
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 7.93,
+            "loadbear_kg": 4.8,
+            "density_kg_dm3": 0.4444,
+            "footprint_cm2": 675,
+            "support_ratio": 0.7
+        }
+    },
+    {
+        "packing_sequence": 9,
+        "item_name": "Kardus Baju",
+        "physical_properties": {
+            "weight_kg": 3,
+            "dimensions_cm": "40x30x30",
+            "fragility": 1,
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 3.75,
+            "loadbear_kg": 12.0,
+            "density_kg_dm3": 0.0833,
+            "footprint_cm2": 1200,
+            "support_ratio": 0.7
+        }
+    },
+    {
+        "packing_sequence": 10,
+        "item_name": "Bantal Sofa",
+        "physical_properties": {
+            "weight_kg": 0.5,
+            "dimensions_cm": "50x50x15",
+            "fragility": 1,
+            "orientable": true
+        },
+        "engine_calculations": {
+            "level": 3,
+            "position": "TOP",
+            "base_score": 3.68,
+            "loadbear_kg": 2.0,
+            "density_kg_dm3": 0.0133,
+            "footprint_cm2": 2500,
+            "support_ratio": 0.75
+        }
+    }
+]

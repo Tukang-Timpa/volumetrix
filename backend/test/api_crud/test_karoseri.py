@@ -2,7 +2,7 @@ from pathlib import Path
 
 import unittest
 
-from api_crud.common import BASE_URL, load_json, request_json
+from test.api_crud.common import BASE_URL, load_json, request_json
 
 
 DATA_FILE = Path(__file__).with_name("data") / "karoseri_test_data.json"

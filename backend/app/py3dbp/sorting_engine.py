@@ -6,12 +6,13 @@ from typing import List, Optional, Tuple
 from app.postgresql.schema.pengiriman import Barang
 
 # Fragility Loadbear Constant
+# "normal" | "fragile" | "do_not_stack"
 FRAGILITY_LOADBEAR = {
-    "ultra_fragile": 0.0,
-    "fragile": 5.0,
-    "normal": 50.0,
-    "sturdy": 200.0,
-    "structure": 500,
+    "do_not_stack": 0.0,    
+    "fragile": 5.0,          
+    "normal": 50.0,          
+    "sturdy": 200.0,         
+    "structure": 500,        
 }
 
 # Density Thresholds Constant
@@ -76,9 +77,9 @@ def _calc_base_score(
     # Fragility penalty
     fragility_penalty = 0.0
     if barang.fragility_level == "fragile":
-        fragility_penalty = -50.0
-    elif barang.fragility_level == "ultra_fragile":
-        fragility_penalty = -80.0 
+        fragility_penalty = -50.0 if barang.berat < 10.0 else -10.0
+    elif barang.fragility_level == "do_not_stack":
+        fragility_penalty = -80.0 if barang.berat < 10.0 else -20.0 
     
     # Composite Score Calculation
     score = (
@@ -98,8 +99,8 @@ def _calc_loadbear(
     footprint: float,
 ) -> float:
     # Determine base loadbear from fragility
-    if barang.fragility_level == "ultra_fragile":
-        base = FRAGILITY_LOADBEAR["ultra_fragile"]
+    if barang.fragility_level == "do_not_stack":
+        base = FRAGILITY_LOADBEAR["do_not_stack"]
     elif barang.fragility_level == "fragile":
         base = FRAGILITY_LOADBEAR["fragile"]
     elif density > 1.0 and footprint > 2500.0:
@@ -147,7 +148,7 @@ def _get_support_ratio(
     density: float,
 ) -> float:
     # Calculate the support surface ratio
-    if barang.fragility_level in ("fragile", "ultra_fragile"):
+    if barang.fragility_level in ("fragile", "do_not_stack"):
         return 0.9
     if density > 0.5:
         return 0.5 
@@ -271,8 +272,9 @@ def _dump_sorting_log(sorted_list: List[Tuple[Barang, PackingConstraint]]):
         })
         
     try:
-        with open(log_filename, "w", encoding="utf-8") as f:
-            json.dump(log_data, f, indent=4)
-        print(f"[Sorting Engine] Detailed report successfully dumped to: {log_filename}")
+        # with open(log_filename, "w", encoding="utf-8") as f:
+        #     json.dump(log_data, f, indent=4)
+        # print(f"[Sorting Engine] Detailed report successfully dumped to: {log_filename}")
+        pass
     except Exception as e:
         print(f"[Sorting Engine] Error Failed to write log: {e}")
