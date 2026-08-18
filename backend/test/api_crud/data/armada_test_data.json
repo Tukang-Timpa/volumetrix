@@ -1,0 +1,32 @@
+[
+  {
+    "nama_kendaraan": "Isuzu ELF 4.8",
+    "jenis_armada": "truk_box",
+    "max_payload": 2500,
+    "karoseri_id": null,
+    "konsumsi_bahan_bakar": 9.5,
+    "status": "tersedia",
+    "img": "uploads/armada/isuzu-elf-48.jpg",
+    "model_3d_template": "models/elf_generic.glb"
+  },
+  {
+    "nama_kendaraan": "Hino Dutro 130 HD",
+    "jenis_armada": "truk_box",
+    "max_payload": 3500,
+    "karoseri_id": null,
+    "konsumsi_bahan_bakar": 8.8,
+    "status": "tersedia",
+    "img": "uploads/armada/hino-dutro-130hd.jpg",
+    "model_3d_template": "models/hino_dutro_generic.glb"
+  },
+  {
+    "nama_kendaraan": "Mitsubishi Fuso Canter FE 74",
+    "jenis_armada": "truk_box",
+    "max_payload": 5000,
+    "karoseri_id": null,
+    "konsumsi_bahan_bakar": 7.9,
+    "status": "maintenance",
+    "img": "uploads/armada/fuso-canter-fe74.jpg",
+    "model_3d_template": "models/fuso_canter_generic.glb"
+  }
+]

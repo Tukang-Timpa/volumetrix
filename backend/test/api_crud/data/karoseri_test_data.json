@@ -1,0 +1,29 @@
+[
+  {
+    "jenis_karoseri": "box",
+    "panjang": 420,
+    "lebar": 210,
+    "tinggi": 220,
+    "bahan": "aluminium",
+    "warna": "putih",
+    "model_3d_template": "models/karoseri_box.glb"
+  },
+  {
+    "jenis_karoseri": "bak terbuka",
+    "panjang": 500,
+    "lebar": 220,
+    "tinggi": 180,
+    "bahan": "baja",
+    "warna": "biru",
+    "model_3d_template": "models/karoseri_bak_terbuka.glb"
+  },
+  {
+    "jenis_karoseri": "refrigerated",
+    "panjang": 460,
+    "lebar": 210,
+    "tinggi": 230,
+    "bahan": "fiberglass",
+    "warna": "putih",
+    "model_3d_template": "models/karoseri_refrigerated.glb"
+  }
+]

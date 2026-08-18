@@ -1,0 +1,12 @@
+langchain
+langchain_core
+python-dotenv
+langgraph
+pandas
+fastapi
+uvicorn
+python-multipart
+langchain-groq
+sqlmodel
+psycopg2-binary
+py3dbp

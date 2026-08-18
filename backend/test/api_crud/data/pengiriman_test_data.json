@@ -1,0 +1,26 @@
+[
+  {
+    "kode_pengiriman": "PENG-20260808-001",
+    "armada_id": null,
+    "tanggal_pengiriman": "2026-08-08",
+    "status": "draft",
+    "total_berat": 258.5,
+    "total_volume": 16.2
+  },
+  {
+    "kode_pengiriman": "PENG-20260808-002",
+    "armada_id": null,
+    "tanggal_pengiriman": "2026-08-09",
+    "status": "diproses",
+    "total_berat": 412.0,
+    "total_volume": 24.7
+  },
+  {
+    "kode_pengiriman": "PENG-20260808-003",
+    "armada_id": null,
+    "tanggal_pengiriman": "2026-08-10",
+    "status": "sudah_disusun",
+    "total_berat": 102.25,
+    "total_volume": 8.4
+  }
+]

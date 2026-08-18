@@ -7,4 +7,8 @@ graphify-out/
 .omo/
 .codegraph
 
+# Python Cache
+__pycache__/
 
+# Byte-compiled / optimized / DLL files
+*.py[cod]

@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Smart Packaging — Test Console</title>
+<style>
+  :root {
+    --bg: #0e1013;
+    --panel: #16191d;
+    --panel2: #1c2025;
+    --line: #262b31;
+    --text: #d8dce1;
+    --muted: #7a8290;
+    --accent: #4fd1a5;
+    --accent-dim: #2f6650;
+    --fragile: #e8926b;
+    --danger: #e05c5c;
+    --mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Top bar */
+  #topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  #topbar .brand {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 8px;
+  }
+  #topbar input {
+    background: #0a0c0e;
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    width: 260px;
+  }
+  #api-status {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  #api-status.ok { color: var(--accent); }
+  #api-status.err { color: var(--danger); }
+
+  /* Tabs */
+  #tabs {
+    display: flex;
+    gap: 2px;
+    padding: 0 16px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    padding: 10px 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  .tab-btn.active {
+    color: var(--text);
+    border-bottom: 2px solid var(--accent);
+  }
+
+  #content { flex: 1; display: flex; overflow: hidden; }
+  .tab-panel { display: none; width: 100%; height: 100%; overflow: hidden; }
+  .tab-panel.active { display: flex; }
+
+  /* Generic CRUD layout: form left, list right */
+  .crud-form {
+    width: 320px;
+    flex-shrink: 0;
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    padding: 18px;
+    overflow-y: auto;
+  }
+  .crud-list { flex: 1; padding: 18px; overflow-y: auto; }
+
+  h2 {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 14px 0;
+    font-weight: 500;
+  }
+  label {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 12px;
+    margin-bottom: 4px;
+  }
+  input[type="text"], input[type="number"], select, textarea {
+    width: 100%;
+    background: #0a0c0e;
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 7px 8px;
+    border-radius: 4px;
+  }
+  .row2 { display: flex; gap: 8px; }
+  .row2 > div { flex: 1; }
+  button.primary {
+    margin-top: 16px;
+    width: 100%;
+    background: var(--accent);
+    color: #06110d;
+    border: none;
+    padding: 9px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.primary:hover { opacity: 0.88; }
+  button.primary:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.ghost {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    cursor: pointer;
+  }
+  button.ghost:hover { color: var(--text); border-color: var(--accent); }
+  button.ghost.danger:hover { color: var(--danger); border-color: var(--danger); }
+
+  .form-msg { margin-top: 10px; font-size: 11px; color: var(--muted); white-space: pre-wrap; }
+  .form-msg.err { color: var(--danger); }
+  .form-msg.ok { color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { text-align: left; color: var(--muted); font-weight: 500; padding: 6px 8px; border-bottom: 1px solid var(--line); font-size: 11px; }
+  td { padding: 7px 8px; border-bottom: 1px solid var(--line); }
+  tr:hover td { background: var(--panel2); }
+  .empty-note { color: var(--muted); font-size: 12px; padding: 20px 0; }
+  .badge { display: inline-block; padding: 1px 6px; border-radius: 10px; font-size: 10px; background: var(--accent-dim); color: var(--accent); }
+  .badge.muted { background: var(--panel2); color: var(--muted); }
+  .badge.warn { background: #4a2f2f; color: var(--fragile); }
+
+  /* Pengiriman tab specific: sidebar list of shipments + right = barang + actions */
+  #pengiriman-sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    overflow-y: auto;
+  }
+  .ship-item {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .ship-item:hover { background: var(--panel2); }
+  .ship-item.selected { background: var(--accent-dim); color: var(--accent); }
+  .ship-item .code { font-weight: 600; }
+  .ship-item .meta { color: var(--muted); font-size: 10px; margin-top: 2px; }
+  #ship-detail { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  #ship-detail-header { padding: 16px 18px; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+  #ship-detail-body { flex: 1; overflow-y: auto; padding: 18px; }
+  #add-barang-form { display: flex; gap: 8px; align-items: flex-end; margin-bottom: 16px; flex-wrap: wrap; }
+  #add-barang-form label { margin-top: 0; }
+  #add-barang-form > div { min-width: 90px; }
+  #add-barang-form button { margin-top: 0; width: auto; padding: 7px 14px; }
+  .checkbox-row { display: flex; align-items: center; gap: 6px; }
+  .checkbox-row input { width: auto; }
+
+  /* Packing/visualizer tab */
+  #packing-controls {
+    width: 300px;
+    flex-shrink: 0;
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    padding: 18px;
+    overflow-y: auto;
+  }
+  #canvas-wrap { flex: 1; position: relative; }
+  #canvas-wrap canvas { display: block; }
+  #hint { position: absolute; bottom: 14px; left: 14px; font-size: 10px; color: var(--muted); pointer-events: none; }
+  #tooltip-3d { 
+    position: absolute; display: none; background: rgba(10, 12, 14, 0.9);
+    border: 1px solid var(--accent); padding: 8px 12px; border-radius: 4px;
+    color: var(--text); font-size: 11px; pointer-events: none; z-index: 10;
+    white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+  #items-legend-list { margin-top: 14px; font-size: 11px; max-height: 300px; overflow-y: auto; }
+  .item-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--line); color: var(--muted); gap: 6px; }
+  .item-row .name { color: var(--text); }
+  .item-row.pending { opacity: 0.35; }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <span class="brand">Smart Packaging</span>
+  <input type="text" id="api-base" value="http://localhost:8000">
+  <button class="ghost" id="ping-btn">Cek koneksi</button>
+  <span id="api-status">belum dicek</span>
+</div>
+
+<div id="tabs">
+  <button class="tab-btn active" data-tab="karoseri">1. Karoseri</button>
+  <button class="tab-btn" data-tab="armada">2. Armada</button>
+  <button class="tab-btn" data-tab="pengiriman">3. Pengiriman &amp; Barang</button>
+  <button class="tab-btn" data-tab="packing">4. Visualisasi Tersimpan</button>
+  <button class="tab-btn" data-tab="strategist">5. AI Strategist</button>
+</div>
+
+<div id="content">
+
+  <!-- TAB: KAROSERI -->
+  <div class="tab-panel active" id="tab-karoseri">
+    <div class="crud-form">
+      <h2>Tambah Karoseri</h2>
+      <label>Jenis karoseri</label>
+      <input type="text" id="k-jenis" placeholder="box tertutup">
+      <div class="row2">
+        <div><label>Panjang (cm)</label><input type="number" id="k-panjang" value="400"></div>
+        <div><label>Lebar (cm)</label><input type="number" id="k-lebar" value="200"></div>
+        <div><label>Tinggi (cm)</label><input type="number" id="k-tinggi" value="200"></div>
+      </div>
+      <label>Bahan (opsional)</label>
+      <input type="text" id="k-bahan" placeholder="aluminium">
+      <label>Warna (opsional)</label>
+      <input type="text" id="k-warna" placeholder="putih">
+      <button class="primary" id="k-submit">Simpan Karoseri</button>
+      <div class="form-msg" id="k-msg"></div>
+    </div>
+    <div class="crud-list">
+      <h2>Daftar Karoseri</h2>
+      <div id="k-table"></div>
+    </div>
+  </div>
+
+  <!-- TAB: ARMADA -->
+  <div class="tab-panel" id="tab-armada">
+    <div class="crud-form">
+      <h2>Tambah Armada</h2>
+      <label>Nama kendaraan / plat</label>
+      <input type="text" id="a-nama" placeholder="B 1234 XY">
+      <label>Jenis armada</label>
+      <input type="text" id="a-jenis" placeholder="CDD">
+      <label>Karoseri</label>
+      <select id="a-karoseri"></select>
+      <div class="row2">
+        <div><label>Max payload (kg)</label><input type="number" id="a-payload" value="3000"></div>
+        <div><label>Konsumsi BBM (L/km)</label><input type="number" step="0.01" id="a-bbm" value="0.3"></div>
+      </div>
+      <button class="primary" id="a-submit">Simpan Armada</button>
+      <div class="form-msg" id="a-msg"></div>
+    </div>
+    <div class="crud-list">
+      <h2>Daftar Armada</h2>
+      <div id="a-table"></div>
+    </div>
+  </div>
+
+  <!-- TAB: PENGIRIMAN & BARANG -->
+  <div class="tab-panel" id="tab-pengiriman">
+    <div id="pengiriman-sidebar">
+      <div style="padding:14px 14px 8px;">
+        <h2 style="margin-bottom:8px;">Pengiriman Baru</h2>
+        <label>Kode pengiriman</label>
+        <input type="text" id="p-kode" placeholder="PGM-001">
+
+        <button class="primary" id="p-submit">Buat Pengiriman</button>
+        <div class="form-msg" id="p-msg"></div>
+      </div>
+      <div style="border-top:1px solid var(--line); padding-top:8px;">
+        <div style="padding:6px 14px; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0.05em;">Pilih Pengiriman</div>
+        <div id="p-list"></div>
+      </div>
+    </div>
+    <div id="ship-detail">
+      <div id="ship-detail-header">
+        <span id="ship-detail-title" style="color:var(--muted);">Belum ada pengiriman dipilih</span>
+      </div>
+      <div id="ship-detail-body"></div>
+    </div>
+  </div>
+
+  <!-- TAB: PACKING & VISUALISASI -->
+  <div class="tab-panel" id="tab-packing">
+    <div id="packing-controls">
+      <h2>Visualisasi Tersimpan</h2>
+      <label>Pilih riwayat strategi</label>
+      <select id="pk-pengiriman"></select>
+      <div id="multi-truck-tabs"></div>
+      <div class="form-msg" id="pk-msg"></div>
+
+      <div style="margin-top:18px; border-top:1px solid var(--line); padding-top:14px;">
+        <label style="margin-top:0;">Kecepatan animasi</label>
+        <select id="pk-speed">
+          <option value="900">Lambat</option>
+          <option value="450" selected>Normal</option>
+          <option value="180">Cepat</option>
+        </select>
+        <button class="primary" id="pk-replay" style="background:transparent; border:1px solid var(--line); color:var(--text);">Putar Ulang Animasi</button>
+      </div>
+
+      <div id="items-legend-list"></div>
+    </div>
+    <div id="canvas-wrap">
+      <div id="tooltip-3d"></div>
+      <div id="hint">drag: orbit · scroll: zoom · shift+drag: pan · hover: inspect</div>
+    </div>
+  </div>
+
+  <!-- TAB: AI STRATEGIST -->
+  <div class="tab-panel" id="tab-strategist">
+    <div class="crud-form" style="width:340px;">
+      <h2>AI Logistics Strategist</h2>
+      <label>Pengiriman aktif</label>
+      <select id="st-pengiriman"></select>
+      <button class="primary" id="st-run">Rancang Strategi</button>
+      <div id="st-progress" style="margin-top: 14px; font-size: 11px; color: var(--accent); white-space: pre-wrap; word-wrap:break-word;"></div>
+      <div class="form-msg" id="st-msg"></div>
+    </div>
+    <div class="crud-list">
+      <h2>Rekomendasi Strategi</h2>
+      <div id="st-recommendations" style="display:flex; flex-direction:column; gap:16px;">
+        <div class="empty-note">Pilih pengiriman lalu klik "Rancang Strategi" untuk meminta saran AI.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+// ---------- Global state ----------
+let apiBase = document.getElementById('api-base').value.replace(/\/$/, '');
+let karoseriList = [];
+let armadaList = [];
+let pengirimanList = [];
+let selectedPengirimanId = null;
+let lastVisualisasiData = null;
+
+// ---------- Helpers ----------
+function apiUrl(path) { return apiBase + path; }
+
+async function apiGet(path) {
+  const res = await fetch(apiUrl(path));
+  if (!res.ok) throw new Error(`GET ${path} -> HTTP ${res.status}`);
+  return res.json();
+}
+async function apiPost(path, body) {
+  const res = await fetch(apiUrl(path), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const detail = await res.text();
+    throw new Error(`POST ${path} -> HTTP ${res.status}: ${detail}`);
+  }
+  return res.json();
+}
+async function apiDelete(path) {
+  const res = await fetch(apiUrl(path), { method: 'DELETE' });
+  if (!res.ok) throw new Error(`DELETE ${path} -> HTTP ${res.status}`);
+  return res.json();
+}
+function setMsg(elId, text, kind) {
+  const el = document.getElementById(elId);
+  el.textContent = text;
+  el.className = 'form-msg' + (kind ? ' ' + kind : '');
+}
+
+// ---------- Tabs ----------
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab === 'packing') {
+      setTimeout(() => onResizeCanvas(), 50);
+    }
+  });
+});
+
+// ---------- API base / ping ----------
+document.getElementById('api-base').addEventListener('change', (e) => {
+  apiBase = e.target.value.replace(/\/$/, '');
+});
+document.getElementById('ping-btn').addEventListener('click', async () => {
+  const statusEl = document.getElementById('api-status');
+  statusEl.textContent = 'mengecek...';
+  statusEl.className = '';
+  try {
+    await apiGet('/');
+    statusEl.textContent = 'terhubung';
+    statusEl.className = 'ok';
+    refreshAll();
+  } catch (e) {
+    statusEl.textContent = 'gagal: ' + e.message;
+    statusEl.className = 'err';
+  }
+});
+
+// ============================================================
+// KAROSERI
+// ============================================================
+document.getElementById('k-submit').addEventListener('click', async () => {
+  const payload = {
+    jenis_karoseri: document.getElementById('k-jenis').value,
+    panjang: parseFloat(document.getElementById('k-panjang').value),
+    lebar: parseFloat(document.getElementById('k-lebar').value),
+    tinggi: parseFloat(document.getElementById('k-tinggi').value),
+    bahan: document.getElementById('k-bahan').value || null,
+    warna: document.getElementById('k-warna').value || null,
+  };
+  if (!payload.jenis_karoseri) { setMsg('k-msg', 'Jenis karoseri wajib diisi.', 'err'); return; }
+  try {
+    await apiPost('/karoseri/', payload);
+    setMsg('k-msg', 'Karoseri tersimpan.', 'ok');
+    document.getElementById('k-jenis').value = '';
+    await loadKaroseri();
+  } catch (e) {
+    setMsg('k-msg', e.message, 'err');
+  }
+});
+
+async function loadKaroseri() {
+  try {
+    karoseriList = await apiGet('/karoseri/');
+  } catch (e) {
+    document.getElementById('k-table').innerHTML = `<div class="empty-note">Gagal memuat: ${e.message}</div>`;
+    return;
+  }
+  renderKaroseriTable();
+  renderKaroseriSelect();
+}
+
+function renderKaroseriTable() {
+  const el = document.getElementById('k-table');
+  if (karoseriList.length === 0) {
+    el.innerHTML = '<div class="empty-note">Belum ada karoseri.</div>';
+    return;
+  }
+  let rows = karoseriList.map(k => `
+    <tr>
+      <td>#${k.id}</td>
+      <td>${k.jenis_karoseri}</td>
+      <td>${k.panjang}×${k.lebar}×${k.tinggi} cm</td>
+      <td>${k.bahan || '—'}</td>
+      <td><button class="ghost danger" onclick="deleteKaroseri(${k.id})">Hapus</button></td>
+    </tr>`).join('');
+  el.innerHTML = `<table><thead><tr><th>ID</th><th>Jenis</th><th>Dimensi (P×L×T)</th><th>Bahan</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderKaroseriSelect() {
+  const sel = document.getElementById('a-karoseri');
+  sel.innerHTML = karoseriList.map(k => `<option value="${k.id}">#${k.id} — ${k.jenis_karoseri} (${k.panjang}×${k.lebar}×${k.tinggi})</option>`).join('')
+    || '<option value="">Belum ada karoseri</option>';
+}
+
+async function deleteKaroseri(id) {
+  try {
+    await apiDelete(`/karoseri/${id}`);
+    await loadKaroseri();
+  } catch (e) {
+    alert('Gagal hapus: ' + e.message);
+  }
+}
+
+// ============================================================
+// ARMADA
+// ============================================================
+document.getElementById('a-submit').addEventListener('click', async () => {
+  const karoseriId = document.getElementById('a-karoseri').value;
+  const payload = {
+    nama_kendaraan: document.getElementById('a-nama').value,
+    jenis_armada: document.getElementById('a-jenis').value || null,
+    karoseri_id: karoseriId ? parseInt(karoseriId) : null,
+    max_payload: parseFloat(document.getElementById('a-payload').value) || null,
+    konsumsi_bahan_bakar: parseFloat(document.getElementById('a-bbm').value) || null,
+  };
+  if (!payload.nama_kendaraan) { setMsg('a-msg', 'Nama kendaraan wajib diisi.', 'err'); return; }
+  if (!payload.karoseri_id) { setMsg('a-msg', 'Pilih karoseri dulu (buat di tab 1 kalau belum ada).', 'err'); return; }
+  try {
+    await apiPost('/armada/', payload);
+    setMsg('a-msg', 'Armada tersimpan.', 'ok');
+    document.getElementById('a-nama').value = '';
+    await loadArmada();
+  } catch (e) {
+    setMsg('a-msg', e.message, 'err');
+  }
+});
+
+async function loadArmada() {
+  try {
+    armadaList = await apiGet('/armada/');
+  } catch (e) {
+    document.getElementById('a-table').innerHTML = `<div class="empty-note">Gagal memuat: ${e.message}</div>`;
+    return;
+  }
+  renderArmadaTable();
+  renderArmadaSelect();
+}
+
+function renderArmadaTable() {
+  const el = document.getElementById('a-table');
+  if (armadaList.length === 0) {
+    el.innerHTML = '<div class="empty-note">Belum ada armada.</div>';
+    return;
+  }
+  let rows = armadaList.map(a => {
+    const k = karoseriList.find(k => k.id === a.karoseri_id);
+    return `
+    <tr>
+      <td>#${a.id}</td>
+      <td>${a.nama_kendaraan}</td>
+      <td>${a.jenis_armada || '—'}</td>
+      <td>${k ? k.jenis_karoseri : '(karoseri #' + a.karoseri_id + ')'}</td>
+      <td>${a.max_payload ?? '—'} kg</td>
+      <td><span class="badge ${a.status === 'tersedia' ? '' : 'muted'}">${a.status}</span></td>
+      <td><button class="ghost danger" onclick="deleteArmada(${a.id})">Hapus</button></td>
+    </tr>`;
+  }).join('');
+  el.innerHTML = `<table><thead><tr><th>ID</th><th>Nama</th><th>Jenis</th><th>Karoseri</th><th>Payload</th><th>Status</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderArmadaSelect() {
+  const opts = armadaList.map(a => `<option value="${a.id}">#${a.id} — ${a.nama_kendaraan}</option>`).join('')
+    || '<option value="">Belum ada armada</option>';
+}
+
+async function deleteArmada(id) {
+  try {
+    await apiDelete(`/armada/${id}`);
+    await loadArmada();
+  } catch (e) {
+    alert('Gagal hapus: ' + e.message);
+  }
+}
+
+// ============================================================
+// PENGIRIMAN & BARANG
+// ============================================================
+document.getElementById('p-submit').addEventListener('click', async () => {
+  const payload = {
+    kode_pengiriman: document.getElementById('p-kode').value,
+  };
+  if (!payload.kode_pengiriman) { setMsg('p-msg', 'Kode pengiriman wajib diisi.', 'err'); return; }
+  try {
+    const created = await apiPost('/pengiriman/', payload);
+    setMsg('p-msg', 'Pengiriman dibuat.', 'ok');
+    document.getElementById('p-kode').value = '';
+    await loadPengiriman();
+    selectPengiriman(created.id);
+  } catch (e) {
+    setMsg('p-msg', e.message, 'err');
+  }
+});
+
+async function loadPengiriman() {
+  try {
+    const rawList = await apiGet('/pengiriman/');
+    window.allPengirimanList = rawList; // Simpan semua termasuk sub-pengiriman
+    // Sembunyikan sub-pengiriman dari UI utama agar user hanya fokus ke parent
+    pengirimanList = rawList.filter(p => p.parent_id === null || p.parent_id === undefined);
+  } catch (e) {
+    document.getElementById('p-list').innerHTML = `<div class="empty-note" style="padding:12px 14px;">Gagal memuat: ${e.message}</div>`;
+    return;
+  }
+  renderPengirimanList();
+  renderPengirimanSelectForPacking();
+}
+
+function renderPengirimanList() {
+  const el = document.getElementById('p-list');
+  if (pengirimanList.length === 0) {
+    el.innerHTML = '<div class="empty-note" style="padding:12px 14px;">Belum ada pengiriman.</div>';
+    return;
+  }
+  el.innerHTML = pengirimanList.map(p => `
+    <div class="ship-item ${p.id === selectedPengirimanId ? 'selected' : ''}" onclick="selectPengiriman(${p.id})">
+      <div class="code">${p.kode_pengiriman}</div>
+      <div class="meta">status: ${p.status}</div>
+    </div>
+  `).join('');
+}
+
+function renderPengirimanSelectForPacking() {
+  const sel = document.getElementById('pk-pengiriman');
+  if (!sel) return;
+  // Hanya tampilkan pengiriman utama yang SUDAH di-pack (status packed / partially_packed)
+  const packedParents = pengirimanList.filter(p => p.status === 'packed' || p.status === 'partially_packed');
+  sel.innerHTML = packedParents.map(p => `<option value="${p.id}">${p.kode_pengiriman} (${p.status})</option>`).join('')
+    || '<option value="">Belum ada riwayat strategi</option>';
+  if (selectedPengirimanId) sel.value = selectedPengirimanId;
+}
+
+async function selectPengiriman(id) {
+  selectedPengirimanId = id;
+  renderPengirimanList();
+  document.getElementById('pk-pengiriman').value = id;
+  const stEl = document.getElementById('st-pengiriman');
+  if (stEl) stEl.value = id;
+  await renderShipDetail();
+}
+
+async function renderShipDetail() {
+  const p = pengirimanList.find(p => p.id === selectedPengirimanId);
+  if (!p) return;
+  document.getElementById('ship-detail-title').innerHTML =
+    `<b>${p.kode_pengiriman}</b> &nbsp; <span class="badge">${p.status}</span>`;
+
+  let barangList = [];
+  try {
+    barangList = await apiGet(`/barang/?pengiriman_id=${p.id}`);
+  } catch (e) {
+    document.getElementById('ship-detail-body').innerHTML = `<div class="empty-note">Gagal memuat barang: ${e.message}</div>`;
+    return;
+  }
+
+  const rows = barangList.map(b => `
+    <tr>
+      <td>#${b.id}</td>
+      <td>${b.nama_barang}</td>
+      <td>${b.panjang}×${b.lebar}×${b.tinggi} cm</td>
+      <td>${b.berat} kg</td>
+      <td>${b.quantity}x</td>
+      <td>
+        ${b.fragility_level !== 'normal' ? '<span class="badge warn" style="margin-right:4px;">' + b.fragility_level + '</span>' : ''}
+        ${b.butuh_pendingin ? '<span class="badge" style="background:#0e6a8f; color:#fff; margin-right:4px;">cool</span>' : ''}
+        ${!b.orientable ? '<span class="badge muted">tidak diputar</span>' : ''}
+      </td>
+      <td><button class="ghost danger" onclick="deleteBarang(${p.id}, ${b.id})">Hapus</button></td>
+    </tr>`).join('');
+
+  document.getElementById('ship-detail-body').innerHTML = `
+    <div id="add-barang-form">
+      <div><label>Nama barang</label><input type="text" id="b-nama" placeholder="Kardus elektronik"></div>
+      <div><label>Panjang</label><input type="number" id="b-panjang" value="40"></div>
+      <div><label>Lebar</label><input type="number" id="b-lebar" value="30"></div>
+      <div><label>Tinggi</label><input type="number" id="b-tinggi" value="30"></div>
+      <div><label>Berat (kg)</label><input type="number" id="b-berat" value="5"></div>
+      <div><label>Qty</label><input type="number" id="b-qty" value="1"></div>
+      <div>
+        <label>Kerapuhan</label>
+        <select id="b-fragility">
+          <option value="normal">Normal</option>
+          <option value="fragile">Fragile</option>
+          <option value="do_not_stack">Do Not Stack</option>
+        </select>
+      </div>
+      <div class="checkbox-row" style="margin-top:18px;">
+        <input type="checkbox" id="b-orientable" checked><label style="margin:0;">Boleh Diputar</label>
+        <input type="checkbox" id="b-pendingin" style="margin-left:14px;"><label style="margin:0;">Butuh Pendingin</label>
+      </div>
+      <button class="primary" id="b-submit">Tambah</button>
+    </div>
+    <div class="form-msg" id="b-msg"></div>
+    <table>
+      <thead><tr><th>ID</th><th>Nama</th><th>Dimensi</th><th>Berat</th><th>Qty</th><th>Status Khusus</th><th></th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="7" class="empty-note">Belum ada barang.</td></tr>'}</tbody>
+    </table>
+  `;
+
+  document.getElementById('b-submit').addEventListener('click', async () => {
+    const payload = {
+      pengiriman_id: p.id,
+      nama_barang: document.getElementById('b-nama').value,
+      panjang: parseFloat(document.getElementById('b-panjang').value),
+      lebar: parseFloat(document.getElementById('b-lebar').value),
+      tinggi: parseFloat(document.getElementById('b-tinggi').value),
+      berat: parseFloat(document.getElementById('b-berat').value),
+      quantity: parseInt(document.getElementById('b-qty').value) || 1,
+      fragility_level: document.getElementById('b-fragility').value,
+      butuh_pendingin: document.getElementById('b-pendingin').checked,
+      orientable: document.getElementById('b-orientable').checked
+    };
+    if (!payload.nama_barang) { setMsg('b-msg', 'Nama barang wajib diisi.', 'err'); return; }
+    try {
+      await apiPost(`/barang/`, payload);
+      setMsg('b-msg', 'Barang ditambahkan.', 'ok');
+      await renderShipDetail();
+    } catch (e) {
+      setMsg('b-msg', e.message, 'err');
+    }
+  });
+}
+
+async function deleteBarang(pengirimanId, barangId) {
+  try {
+    await apiDelete(`/barang/${barangId}`);
+    await renderShipDetail();
+  } catch (e) {
+    alert('Gagal hapus: ' + e.message);
+  }
+}
+
+// ============================================================
+// PACKING + VISUALIZER (three.js)
+// ============================================================
+let scene, camera, renderer, controls, canvasWrap;
+let raycaster, mouse;
+
+function initScene() {
+  canvasWrap = document.getElementById('canvas-wrap');
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a0c0e);
+  
+  raycaster = new THREE.Raycaster();
+  mouse = new THREE.Vector2();
+  camera = new THREE.PerspectiveCamera(50, canvasWrap.clientWidth / Math.max(canvasWrap.clientHeight,1), 0.1, 5000);
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(canvasWrap.clientWidth, canvasWrap.clientHeight);
+  canvasWrap.appendChild(renderer.domElement);
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  addLights();
+  animate();
+  
+  canvasWrap.addEventListener('mousemove', onCanvasMouseMove);
+}
+
+let hoveredMesh = null;
+
+function onCanvasMouseMove(event) {
+  const rect = canvasWrap.getBoundingClientRect();
+  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+  
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(scene.children, false);
+  
+  const tooltip = document.getElementById('tooltip-3d');
+  
+  let found = null;
+  for (const obj of intersects) {
+    if (obj.object.userData.isItem) {
+      found = obj.object;
+      break;
+    }
+  }
+  
+  if (hoveredMesh && hoveredMesh !== found) {
+    hoveredMesh.material.color.setHex(hoveredMesh.userData.originalColor);
+    hoveredMesh = null;
+  }
+  
+  if (found) {
+    if (hoveredMesh !== found) {
+      found.material.color.setHex(0x4fd1a5); // Highlight color
+      hoveredMesh = found;
+    }
+    const info = found.userData.info;
+    tooltip.style.display = 'block';
+    tooltip.style.left = (event.clientX - rect.left + 15) + 'px';
+    tooltip.style.top = (event.clientY - rect.top + 15) + 'px';
+    tooltip.innerHTML = `
+      <b style="color:var(--accent)">${info.nama_barang || ('Item #' + info.barang_id)}</b><br>
+      Dimensi: ${info.panjang}x${info.lebar}x${info.tinggi}<br>
+      Posisi: X:${info.posisi_x} Y:${info.posisi_y} Z:${info.posisi_z}<br>
+      ${info.is_fragile ? '<span style="color:var(--fragile)">Fragile</span>' : ''}
+    `;
+  } else {
+    tooltip.style.display = 'none';
+  }
+}
+function addLights() {
+  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+  const dir = new THREE.DirectionalLight(0xffffff, 0.7);
+  dir.position.set(1, 1.4, 1);
+  scene.add(dir);
+  const dir2 = new THREE.DirectionalLight(0xffffff, 0.3);
+  dir2.position.set(-1, -0.5, -1);
+  scene.add(dir2);
+}
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+function onResizeCanvas() {
+  if (!renderer) return;
+  camera.aspect = canvasWrap.clientWidth / Math.max(canvasWrap.clientHeight,1);
+  camera.updateProjectionMatrix();
+  renderer.setSize(canvasWrap.clientWidth, canvasWrap.clientHeight);
+}
+window.addEventListener('resize', onResizeCanvas);
+
+function clearScene() {
+  while (scene.children.length > 0) scene.remove(scene.children[0]);
+  addLights();
+}
+
+function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+function setupCargoBox(data) {
+  clearScene();
+  const k = data.karoseri || {};
+  const P = k.panjang || 100, L = k.lebar || 100, T = k.tinggi || 100;
+
+  const boxGeo = new THREE.BoxGeometry(P, T, L);
+  const edges = new THREE.EdgesGeometry(boxGeo);
+  const boxLine = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x4fd1a5, opacity: 0.6, transparent: true }));
+  boxLine.position.set(P / 2, T / 2, L / 2);
+  scene.add(boxLine);
+
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(P * 1.4, L * 1.4),
+    new THREE.MeshStandardMaterial({ color: 0x16191d, side: THREE.DoubleSide })
+  );
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.set(P / 2, 0, L / 2);
+  scene.add(floor);
+
+  const maxDim = Math.max(P, L, T);
+  camera.position.set(P * 1.3, maxDim * 1.15, L * 1.7);
+  controls.target.set(P / 2, T / 3, L / 2);
+  controls.update();
+
+  return { P, L, T };
+}
+
+function animatePlacement(data, stepMs) {
+  const { P, L, T } = setupCargoBox(data);
+  const legendEl = document.getElementById('items-legend-list');
+  const items = data.items || [];
+
+  legendEl.innerHTML = items.map((it, idx) => `
+    <div class="item-row pending" id="legend-${idx}">
+      <span class="name">${it.nama_barang || ('#' + it.barang_id)}</span>
+      <span>${it.panjang}×${it.lebar}×${it.tinggi}</span>
+    </div>
+  `).join('');
+
+  items.forEach((it, idx) => {
+    const p = it.panjang || 1, l = it.lebar || 1, t = it.tinggi || 1;
+    const geo = new THREE.BoxGeometry(p, t, l);
+    const color = it.is_fragile ? 0xe8926b : 0x5b8def;
+    const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color, opacity: 0.9, transparent: true }));
+    mesh.userData = { isItem: true, info: it, originalColor: color };
+    const edgesItem = new THREE.EdgesGeometry(geo);
+    mesh.add(new THREE.LineSegments(edgesItem, new THREE.LineBasicMaterial({ color: 0x0a0c0e })));
+
+    const targetX = (it.posisi_x || 0) + p / 2;
+    const targetY = (it.posisi_z || 0) + t / 2;
+    const targetZ = (it.posisi_y || 0) + l / 2;
+
+    // mulai dari atas kargo (jatuh ke posisi), staggered per index
+    mesh.position.set(targetX, T + 60, targetZ);
+    mesh.visible = false;
+    scene.add(mesh);
+
+    setTimeout(() => {
+      mesh.visible = true;
+      const startY = T + 60;
+      const startTime = performance.now();
+      const duration = Math.max(stepMs * 0.9, 150);
+      const legendRow = document.getElementById(`legend-${idx}`);
+      if (legendRow) legendRow.classList.remove('pending');
+
+      function tick(now) {
+        const t01 = Math.min((now - startTime) / duration, 1);
+        const eased = easeOutCubic(t01);
+        mesh.position.y = startY + (targetY - startY) * eased;
+        if (t01 < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }, idx * stepMs);
+  });
+}
+
+// Tombol pk-run (Manual Packing) sudah dihapus dari UI.
+
+document.getElementById('pk-replay').addEventListener('click', () => {
+  if (!lastVisualisasiData) { setMsg('pk-msg', 'Pilih riwayat strategi dulu.', 'err'); return; }
+  const speed = parseInt(document.getElementById('pk-speed').value);
+  animatePlacement(lastVisualisasiData, speed);
+});
+
+document.getElementById('pk-pengiriman').addEventListener('change', (e) => {
+  const pId = parseInt(e.target.value);
+  if (!pId) return;
+  
+  // Cari sub-pengiriman
+  const children = window.allPengirimanList.filter(p => p.parent_id === pId);
+  const hintEl = document.getElementById('multi-truck-tabs');
+  
+  if (children.length > 0) {
+    let multiTabsHtml = `<div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">`;
+    multiTabsHtml += `<div style="font-size:11px; color:var(--muted);">Armada Terlibat:</div>`;
+    children.forEach((c, i) => {
+       multiTabsHtml += `<button class="ghost" onclick="loadVisualizationFor(${c.id})" style="text-align:left;">Truk ${i+1} (Sub-ID ${c.id})</button>`;
+    });
+    multiTabsHtml += `</div>`;
+    hintEl.innerHTML = multiTabsHtml;
+    // Auto load first child
+    loadVisualizationFor(children[0].id);
+  } else {
+    hintEl.innerHTML = ''; // Tidak ada sub armada
+    loadVisualizationFor(pId);
+  }
+});
+
+// ---------- AI STRATEGIST ----------
+function renderPengirimanSelectForStrategist() {
+  const sel = document.getElementById('st-pengiriman');
+  if (!sel) return;
+  sel.innerHTML = pengirimanList.map(p => `<option value="${p.id}">${p.kode_pengiriman} (${p.status})</option>`).join('')
+    || '<option value="">Belum ada pengiriman</option>';
+  if (selectedPengirimanId) sel.value = selectedPengirimanId;
+}
+
+document.getElementById('st-pengiriman').addEventListener('change', (e) => {
+  selectPengiriman(parseInt(e.target.value));
+});
+
+let stratEventSource = null;
+
+document.getElementById('st-run').addEventListener('click', async () => {
+  const pId = document.getElementById('st-pengiriman').value;
+  if (!pId) { setMsg('st-msg', 'Pilih pengiriman dulu.', 'err'); return; }
+  
+  if (stratEventSource) { stratEventSource.close(); }
+  
+  document.getElementById('st-progress').textContent = 'Memulai AI...';
+  setMsg('st-msg', '', '');
+  document.getElementById('st-recommendations').innerHTML = '';
+
+  const url = apiUrl(`/pengiriman/${pId}/strategize`);
+  stratEventSource = new EventSource(url);
+  
+  stratEventSource.onmessage = function(event) {
+    if (event.data === "[DONE]") {
+      stratEventSource.close();
+      document.getElementById('st-progress').textContent += '\n\n[SELESAI]';
+      return;
+    }
+    try {
+      const data = JSON.parse(event.data);
+      if (data.step === "done") {
+        stratEventSource.close();
+        document.getElementById('st-progress').textContent += '\n\n[SELESAI]';
+        renderStrategies(data.data.recommendation, pId);
+      } else if (data.step === "error" || data.step === "timeout") {
+        stratEventSource.close();
+        setMsg('st-msg', data.message, 'err');
+      } else {
+        document.getElementById('st-progress').textContent += `\n> ${data.step}: ${data.message || ''}`;
+      }
+    } catch(e) {
+      console.error("Parse error", e);
+    }
+  };
+  stratEventSource.onerror = function(err) {
+    console.error("SSE error", err);
+    stratEventSource.close();
+    setMsg('st-msg', 'Terjadi kesalahan atau koneksi terputus.', 'err');
+  };
+});
+
+// Global cache for preloaded 3D data
+window.preloadedVisualizations = {};
+
+window.executeStrategy = async function(pId, label, sequenceStr) {
+  try {
+    const sequence = JSON.parse(sequenceStr);
+    
+    // UI Loading state
+    document.getElementById('st-progress').textContent = 'Mengeksekusi strategi & memuat data 3D...\nMohon tunggu.';
+    
+    const res = await apiPost(`/pengiriman/${pId}/execute-strategy`, {
+      strategy_label: label,
+      armada_sequence: sequence
+    });
+    
+    await refreshAll();
+    
+    window.preloadedVisualizations = {}; // Reset cache
+    
+    // Preload all 3D visualizations before switching tabs
+    if (res.details && res.details.length > 0) {
+      document.getElementById('st-progress').textContent = 'Mengunduh geometri 3D...';
+      for (const d of res.details) {
+        const data = await apiGet(`/pengiriman/${d.pengiriman_id}/visualisation`);
+        window.preloadedVisualizations[d.pengiriman_id] = data;
+      }
+    }
+    
+    document.getElementById('st-progress').textContent = 'Selesai!';
+    
+    // Switch to packing tab
+    document.querySelector('.tab-btn[data-tab="packing"]').click();
+    
+    // Create subtabs if multiple fleets
+    let multiTabsHtml = '';
+    if (res.details && res.details.length > 0) {
+      multiTabsHtml = `<div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">`;
+      multiTabsHtml += `<div style="font-size:11px; color:var(--muted);">Sub-pengiriman AI:</div>`;
+      res.details.forEach((d, i) => {
+         multiTabsHtml += `<button class="ghost" onclick="loadVisualizationFor(${d.pengiriman_id})" style="text-align:left;">Truk ${i+1}: ${d.armada_nama}</button>`;
+      });
+      multiTabsHtml += `</div>`;
+      
+      // Auto-load the first truck from cache
+      loadVisualizationFor(res.details[0].pengiriman_id);
+    }
+    
+    const hintEl = document.getElementById('multi-truck-tabs');
+    hintEl.innerHTML = multiTabsHtml;
+    
+    setMsg('pk-msg', `Strategi dieksekusi: ${res.message}`, 'ok');
+
+  } catch (e) {
+    alert("Gagal execute: " + e.message);
+  }
+};
+
+window.loadVisualizationFor = async function(pengirimanId) {
+  const sel = document.getElementById('pk-pengiriman');
+  if (Array.from(sel.options).some(o => o.value == pengirimanId)) {
+    sel.value = pengirimanId;
+  }
+  setMsg('pk-msg', 'Menyiapkan kanvas 3D...', '');
+  
+  try {
+    let data;
+    // Gunakan cache jika ada, jika tidak fetch ulang
+    if (window.preloadedVisualizations && window.preloadedVisualizations[pengirimanId]) {
+      data = window.preloadedVisualizations[pengirimanId];
+    } else {
+      data = await apiGet(`/pengiriman/${pengirimanId}/visualisation`);
+    }
+    
+    lastVisualisasiData = data;
+    const speed = parseInt(document.getElementById('pk-speed').value);
+    animatePlacement(data, speed);
+    setMsg('pk-msg', `Visualisasi Truk dimuat.`, 'ok');
+  } catch (e) {
+    setMsg('pk-msg', 'Gagal memuat visualisasi: ' + e.message, 'err');
+  }
+};
+
+function renderStrategies(resultData, pId) {
+  const container = document.getElementById('st-recommendations');
+  const strats = resultData.strategies || [];
+  
+  if (strats.length === 0) {
+    container.innerHTML = `<div class="empty-note">Tidak ada strategi yang ditemukan.</div>`;
+    return;
+  }
+
+  let html = `<div style="margin-bottom:12px; color:var(--text); font-size:12px; line-height:1.5;">${resultData.kesimpulan || ''}</div>`;
+  
+  html += strats.map((s, idx) => {
+    const sLabel = s.label.replace(/"/g, '&quot;');
+    const sSeq = JSON.stringify(s.armada_sequence || []).replace(/"/g, '&quot;');
+    return `
+      <div style="background:var(--panel2); padding:16px; border:1px solid var(--line); border-radius:6px;">
+        <h3 style="margin:0 0 10px; font-size:14px; color:var(--text);">Rank ${s.ranking}: ${s.label} <span class="badge ${s.semua_muat ? '' : 'warn'}" style="margin-left:8px;">${s.semua_muat ? 'Semua Muat' : 'Ada yg tertinggal'}</span></h3>
+        <div style="font-size:12px; color:var(--muted); margin-bottom:14px;">Skor: <b style="color:var(--text)">${s.skor}</b> &nbsp;|&nbsp; Util: <b style="color:var(--text)">${s.utilisasi_volume_persen}%</b> &nbsp;|&nbsp; Biaya: <b style="color:var(--text)">${s.estimasi_biaya || '?'}</b></div>
+        
+        <div style="margin-bottom:12px; font-size:11px; display:flex; gap:16px;">
+          <div style="flex:1;"><b style="color:var(--accent);">Pro:</b><br>+ ${s.pro.join('<br>+ ')}</div>
+          <div style="flex:1;"><b style="color:var(--fragile);">Kontra:</b><br>- ${s.kontra.join('<br>- ')}</div>
+        </div>
+        <p style="font-size:11px; color:var(--text); line-height:1.5; margin-bottom:16px;">${s.ringkasan}</p>
+        <button class="primary" style="width:auto; padding:8px 16px; font-size:11px;" onclick="executeStrategy(${pId}, '${sLabel}', '${sSeq}')">Eksekusi Strategi Ini</button>
+      </div>
+    `;
+  }).join('');
+  
+  container.innerHTML = html;
+}
+
+// ---------- Init ----------
+async function refreshAll() {
+  await loadKaroseri();
+  await loadArmada();
+  await loadPengiriman();
+  renderPengirimanSelectForStrategist();
+}
+
+initScene();
+</script>
+
+</body>
+</html>
