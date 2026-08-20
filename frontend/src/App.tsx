@@ -8,6 +8,7 @@ import { Step3Pengiriman } from "./components/steps/Step3Pengiriman";
 import { Step4Barang } from "./components/steps/Step4Barang";
 import { Step5Rekomendasi } from "./components/steps/Step5Rekomendasi";
 import { Step6Visualisasi } from "./components/steps/Step6Visualisasi";
+import { Step7Ringkasan } from "./components/steps/Step7Ringkasan";
 
 const STEP_COMPONENTS: Record<string, React.FC<{ onAdvance?: () => void }>> = {
   karoseri: Step1Karoseri,
@@ -16,6 +17,7 @@ const STEP_COMPONENTS: Record<string, React.FC<{ onAdvance?: () => void }>> = {
   barang: Step4Barang,
   rekomendasi: Step5Rekomendasi,
   visualisasi: Step6Visualisasi,
+  ringkasan: Step7Ringkasan,
 };
 
 function AppShell() {

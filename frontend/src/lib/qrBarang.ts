@@ -12,6 +12,10 @@ export interface BarangQrPayload {
   berat: number;
   quantity: number;
   bisaDitumpuk: boolean;
+  orientable?: boolean;
+  fragilityLevel?: string;
+  bottomAxis?: string | null;
+  bottomFaceIndex?: number | null;
 }
 
 export function encodeBarangQr(data: BarangQrPayload): string {
@@ -23,6 +27,10 @@ export function encodeBarangQr(data: BarangQrPayload): string {
     b: data.berat,
     q: data.quantity,
     s: data.bisaDitumpuk ? 1 : 0,
+    o: data.orientable ? 1 : 0,
+    f: data.fragilityLevel,
+    ba: data.bottomAxis,
+    bfi: data.bottomFaceIndex
   });
 }
 
@@ -40,9 +48,13 @@ export function decodeBarangQr(raw: string): BarangQrPayload | null {
     const berat = Number(obj.b ?? obj.berat);
     const quantity = Number(obj.q ?? obj.quantity ?? 1);
     const bisaDitumpuk = obj.s !== undefined ? Boolean(obj.s) : Boolean(obj.bisaDitumpuk ?? true);
+    const orientable = obj.o !== undefined ? Boolean(obj.o) : Boolean(obj.orientable ?? false);
+    const fragilityLevel = obj.f ?? obj.fragilityLevel ?? (bisaDitumpuk ? "normal" : "fragile");
+    const bottomAxis = obj.ba ?? obj.bottomAxis ?? null;
+    const bottomFaceIndex = obj.bfi ?? obj.bottomFaceIndex ?? null;
 
     if (namaBarang && panjang > 0 && lebar > 0 && tinggi > 0 && berat > 0 && quantity > 0) {
-      return { namaBarang, panjang, lebar, tinggi, berat, quantity, bisaDitumpuk };
+      return { namaBarang, panjang, lebar, tinggi, berat, quantity, bisaDitumpuk, orientable, fragilityLevel, bottomAxis, bottomFaceIndex };
     }
   } catch {
     // lanjut ke format pipe-delimited

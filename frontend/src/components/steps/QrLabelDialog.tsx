@@ -18,6 +18,10 @@ export function QrLabelDialog({ barang }: { barang: Barang }) {
       berat: barang.berat,
       quantity: barang.quantity,
       bisaDitumpuk: barang.bisaDitumpuk,
+      orientable: barang.orientable,
+      fragilityLevel: barang.fragilityLevel,
+      bottomAxis: barang.bottomAxis,
+      bottomFaceIndex: barang.bottomFaceIndex,
     });
     QRCode.toDataURL(payload, { margin: 1, width: 240, color: { dark: "#0a0a0a", light: "#f5f0e6" } })
       .then((url) => { if (!cancelled) setDataUrl(url); })

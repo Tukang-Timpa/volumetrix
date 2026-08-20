@@ -16,6 +16,10 @@ class Pengiriman(SQLModel, table=True):
     tanggal_pengiriman: Optional[date] = None
     status: str = Field(default="draft")  # draft | diproses | sudah_disusun | terkirim
 
+    asal: Optional[str] = None
+    tujuan: Optional[str] = None
+    jarak_km: Optional[float] = None
+
     total_berat: Optional[float] = None
     total_volume: Optional[float] = None
 
@@ -41,3 +45,5 @@ class Barang(SQLModel, table=True):
     fragility_level: str = Field(default="normal")  # normal | fragile | do_not_stack
     butuh_pendingin: bool = Field(default=False)
     orientable: bool = Field(default=False)
+    bottom_axis: Optional[str] = None  # panjang | lebar | tinggi | None
+    bottom_face_index: Optional[int] = None

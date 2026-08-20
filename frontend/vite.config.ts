@@ -10,8 +10,7 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: [
-      'backspace-sprain-diagnosis.ngrok-free.dev'
-    ]
+    port: 3000,
+    host: true,
   }
 });

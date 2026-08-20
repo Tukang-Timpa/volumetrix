@@ -1,6 +1,6 @@
-// ── Status yang dipakai berulang di beberapa entitas ──────────────────────
 export type AssetStatus = "aktif" | "ready" | "maintenance";
 export type PengirimanStatus = "persiapan" | "on-going" | "selesai";
+export type JenisBBM = "solar" | "pertalite" | "other";
 
 // ── Step 1: Karoseri (badan kendaraan / kontainer) ─────────────────────────
 export type JenisKaroseri =
@@ -39,6 +39,7 @@ export interface Armada {
   jumlah: number; // jumlah unit kendaraan (1 record = 1 tipe armada, bisa batch)
   maxPayload: number; // kg
   konsumsiBbm: number; // km/liter
+  jenisBbm?: JenisBBM | null;
   status: AssetStatus;
   createdAt: number;
 }
@@ -47,6 +48,9 @@ export interface Armada {
 export interface Pengiriman {
   id: string; // e.g. PGR-0001
   kodePengiriman: string;
+  asal?: string;
+  tujuan?: string;
+  jarakKm?: number;
   status: PengirimanStatus;
   createdAt: number;
 }
@@ -62,6 +66,10 @@ export interface Barang {
   berat: number; // kg per item
   quantity: number;
   bisaDitumpuk: boolean;
+  fragilityLevel?: string;
+  orientable?: boolean;
+  bottomAxis?: string | null;
+  bottomFaceIndex?: number | null;
   createdAt: number;
 }
 
@@ -81,6 +89,8 @@ export interface RekomendasiStrategi {
   kelebihan: string[];
   kekurangan: string[];
   skorEfisiensi: number; // 0-100
+  estimasiBiayaBbm?: number;
+  estimasiLiterBbm?: number;
 }
 
 /** Strategi yang sedang dipilih user di Step 5, dibawa sebagai default ke Step 6. */

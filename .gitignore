@@ -12,3 +12,28 @@ __pycache__/
 
 # Byte-compiled / optimized / DLL files
 *.py[cod]
+
+# Virtual Environments
+venv/
+backend/venv/
+
+# Environment Variables
+.env
+backend/.env
+frontend/.env
+
+# Logs
+*.log
+backend/log/
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# Volumetrix Temp Files
+temp_py3dbp/
+
+# Frontend caches
+frontend/.next/
+frontend/out/
+frontend/dist/

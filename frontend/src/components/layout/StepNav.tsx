@@ -1,4 +1,4 @@
-import { Boxes, PackageSearch, Sparkles, Truck, PackageCheck, View, type LucideIcon } from "lucide-react";
+import { Boxes, PackageSearch, Sparkles, Truck, PackageCheck, View, ClipboardList, type LucideIcon } from "lucide-react";
 import { cn } from "../../lib/utils";
 
 export interface StepDef {
@@ -14,6 +14,7 @@ export const STEPS: StepDef[] = [
   { key: "barang", label: "Barang", icon: PackageCheck },
   { key: "rekomendasi", label: "Rekomendasi AI", icon: Sparkles },
   { key: "visualisasi", label: "Visualisasi 3D", icon: View },
+  { key: "ringkasan", label: "Ringkasan", icon: ClipboardList },
 ];
 
 export function StepNav({
@@ -25,7 +26,7 @@ export function StepNav({
 }) {
   return (
     <nav className="mx-auto max-w-[1400px] px-6 pt-6">
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+      <div className="grid grid-cols-3 sm:grid-cols-7 gap-2">
         {STEPS.map((step, idx) => {
           const isActive = step.key === active;
           const Icon = step.icon;

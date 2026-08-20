@@ -1,5 +1,7 @@
 import { lazy, Suspense, useRef, useState } from "react";
 import Papa from "papaparse";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, Edges } from "@react-three/drei";
 import { Trash2, Plus, Upload, QrCode, Pencil, PackageX, Layers, LayersIcon, ScanQrCode, Loader2 } from "lucide-react";
 import { useAppData } from "../../context/AppDataContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
@@ -22,7 +24,42 @@ function DialogLoading() {
   );
 }
 
-const emptyForm = { nama: "", panjang: "", lebar: "", tinggi: "", berat: "", quantity: "1", stackable: true };
+const emptyForm = { nama: "", panjang: "", lebar: "", tinggi: "", berat: "", quantity: "1", stackable: true, orientable: false, fragilityLevel: "normal", bottomAxis: null as string | null, bottomFaceIndex: null as number | null };
+
+
+function BarangCanvas({ w, h, d, bottomFaceIndex, setBottomFace, fragilityLevel }: { w: number, h: number, d: number, bottomFaceIndex: number | null, setBottomFace: (axis: string, faceIndex: number) => void, fragilityLevel: string }) {
+  const maxDim = Math.max(w, h, d) || 1;
+  const scale = 2 / maxDim;
+  const sw = w * scale || 1;
+  const sh = h * scale || 1;
+  const sd = d * scale || 1;
+
+  const handleClick = (e: any) => {
+    e.stopPropagation();
+    const fIdx = e.face?.materialIndex;
+    if (fIdx === 0 || fIdx === 1) setBottomFace("panjang", fIdx);
+    else if (fIdx === 2 || fIdx === 3) setBottomFace("tinggi", fIdx);
+    else if (fIdx === 4 || fIdx === 5) setBottomFace("lebar", fIdx);
+  };
+
+  const color = fragilityLevel !== "normal" ? "#e8926b" : "#5b8def";
+  const hlColor = "#ef4444"; // Red highlight
+
+  const mats = Array(6).fill(null).map((_, i) => {
+    const highlight = i === bottomFaceIndex;
+    return <meshStandardMaterial key={i} attach={`material-${i}`} color={highlight ? hlColor : color} opacity={highlight ? 0.9 : 0.7} transparent />;
+  });
+
+  return (
+    <group>
+      <mesh onClick={handleClick}>
+        <boxGeometry args={[sw, sh, sd]} />
+        {mats}
+        <Edges color="#0d1414" />
+      </mesh>
+    </group>
+  );
+}
 
 export function Step4Barang({ onAdvance }: { onAdvance?: () => void }) {
   const { pengirimanList, barangList, addBarang, addBarangBulk, updateBarang, removeBarang } = useAppData();
@@ -63,6 +100,9 @@ export function Step4Barang({ onAdvance }: { onAdvance?: () => void }) {
       berat,
       quantity: qty,
       bisaDitumpuk: form.stackable,
+      orientable: form.orientable,
+      bottomAxis: form.bottomAxis,
+      bottomFaceIndex: form.bottomFaceIndex
     });
     setForm(emptyForm);
     onAdvance?.();
@@ -87,6 +127,7 @@ export function Step4Barang({ onAdvance }: { onAdvance?: () => void }) {
             berat: parseFloat(row.berat),
             quantity: parseInt(row.quantity, 10) || 1,
             bisaDitumpuk: /^(1|true|ya|y)$/i.test((row.bisa_ditumpuk || row.bisaDitumpuk || "true").trim()),
+            orientable: /^(1|true|ya|y)$/i.test((row.boleh_miring || row.orientable || "false").trim()),
           }))
           .filter((r) => r.panjang > 0 && r.lebar > 0 && r.tinggi > 0 && r.berat > 0);
         if (rows.length) {
@@ -155,15 +196,46 @@ export function Step4Barang({ onAdvance }: { onAdvance?: () => void }) {
                 <Input id="qty" type="number" min={1} value={form.quantity} onChange={(e) => setForm((f) => ({ ...f, quantity: e.target.value }))} />
               </div>
             </div>
-            <label className="flex items-center gap-2 text-xs text-neutral-400 cursor-pointer select-none">
-              <input
-                type="checkbox"
-                checked={form.stackable}
-                onChange={(e) => setForm((f) => ({ ...f, stackable: e.target.checked }))}
-                className="h-3.5 w-3.5 rounded border-neutral-700 accent-teal-400"
-              />
-              Bisa ditumpuk (stackable)
-            </label>
+            <div className="flex flex-col gap-2">
+              <label className="flex items-center gap-2 text-xs text-neutral-400 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={form.stackable}
+                  onChange={(e) => setForm((f) => ({ ...f, stackable: e.target.checked }))}
+                  className="h-3.5 w-3.5 rounded border-neutral-700 accent-teal-400"
+                />
+                Bisa ditumpuk (stackable)
+              </label>
+              <label className="flex items-center gap-2 text-xs text-neutral-400 cursor-pointer select-none" title="Jika dicentang, AI dapat membaringkan barang secara miring untuk menghemat ruang">
+                <input
+                  type="checkbox"
+                  checked={form.orientable}
+                  onChange={(e) => setForm((f) => ({ ...f, orientable: e.target.checked }))}
+                  className="h-3.5 w-3.5 rounded border-neutral-700 accent-teal-400"
+                />
+                Boleh dimiringkan (orientable)
+              </label>
+            </div>
+            
+            <div className="h-48 w-full bg-neutral-900 rounded-md overflow-hidden relative mt-2 mb-2 border border-neutral-800">
+              <Canvas camera={{ position: [3, 3, 3], fov: 50 }}>
+                <ambientLight intensity={0.5} />
+                <directionalLight position={[10, 10, 10]} intensity={1} />
+                <OrbitControls enableZoom={true} enablePan={false} />
+                <BarangCanvas 
+                  w={parseFloat(form.panjang) || 10} 
+                  h={parseFloat(form.tinggi) || 10} 
+                  d={parseFloat(form.lebar) || 10} 
+                  bottomFaceIndex={form.bottomFaceIndex}
+                  setBottomFace={(axis, idx) => setForm(f => ({ ...f, bottomAxis: axis, bottomFaceIndex: idx }))}
+                  fragilityLevel={form.stackable ? "normal" : "fragile"}
+                />
+              </Canvas>
+              <div className="absolute bottom-2 left-2 text-[10px] text-neutral-400 pointer-events-none bg-black/50 px-2 py-1 rounded">
+                Klik sisi untuk jadikan alas (merah). Putar dengan mouse.
+              </div>
+            </div>
+
             {error && <p className="text-xs text-red-400">{error}</p>}
             <Button type="submit" className="w-full" disabled={!pengirimanId}>
               <Plus className="h-4 w-4" /> Tambah Barang
@@ -213,7 +285,7 @@ export function Step4Barang({ onAdvance }: { onAdvance?: () => void }) {
             onChange={(e) => e.target.files?.[0] && handleCsv(e.target.files[0])}
           />
           <p className="text-[11px] text-neutral-600">
-            Kolom CSV: nama_barang, panjang, lebar, tinggi, berat, quantity, bisa_ditumpuk
+            Kolom CSV: nama_barang, panjang, lebar, tinggi, berat, quantity, bisa_ditumpuk, boleh_miring
           </p>
         </CardContent>
       </Card>
@@ -325,7 +397,12 @@ function EditBarangForm({
   const [tinggi, setTinggi] = useState(String(barang.tinggi));
   const [berat, setBerat] = useState(String(barang.berat));
   const [quantity, setQuantity] = useState(String(barang.quantity));
+  
   const [stackable, setStackable] = useState(barang.bisaDitumpuk);
+  const [orientable, setOrientable] = useState(barang.orientable ?? false);
+  const [bottomAxis, setBottomAxis] = useState<string | null>(barang.bottomAxis || null);
+  const [bottomFaceIndex, setBottomFaceIndex] = useState<number | null>(barang.bottomFaceIndex ?? null);
+
 
   return (
     <div className="space-y-3">
@@ -357,15 +434,42 @@ function EditBarangForm({
           <Input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
         </div>
       </div>
-      <label className="flex items-center gap-2 text-xs text-neutral-400 cursor-pointer select-none">
-        <input
-          type="checkbox"
-          checked={stackable}
-          onChange={(e) => setStackable(e.target.checked)}
-          className="h-3.5 w-3.5 rounded border-neutral-700 accent-teal-400"
-        />
-        Bisa ditumpuk (stackable)
-      </label>
+      <div className="flex flex-col gap-2">
+        <label className="flex items-center gap-2 text-xs text-neutral-400 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={stackable}
+            onChange={(e) => setStackable(e.target.checked)}
+            className="h-3.5 w-3.5 rounded border-neutral-700 accent-teal-400"
+          />
+          Bisa ditumpuk (stackable)
+        </label>
+        <label className="flex items-center gap-2 text-xs text-neutral-400 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={orientable}
+            onChange={(e) => setOrientable(e.target.checked)}
+            className="h-3.5 w-3.5 rounded border-neutral-700 accent-teal-400"
+          />
+          Boleh dimiringkan (orientable)
+        </label>
+      </div>
+      <div className="h-40 w-full bg-neutral-900 rounded-md overflow-hidden relative mt-2 mb-2 border border-neutral-800">
+        <Canvas camera={{ position: [3, 3, 3], fov: 50 }}>
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[10, 10, 10]} intensity={1} />
+          <OrbitControls enableZoom={true} enablePan={false} />
+          <BarangCanvas 
+            w={parseFloat(panjang) || 10} 
+            h={parseFloat(tinggi) || 10} 
+            d={parseFloat(lebar) || 10} 
+            bottomFaceIndex={bottomFaceIndex}
+            setBottomFace={(axis, idx) => { setBottomAxis(axis); setBottomFaceIndex(idx); }}
+            fragilityLevel={stackable ? "normal" : "fragile"}
+          />
+        </Canvas>
+      </div>
+
       <Button
         className="w-full"
         onClick={() =>
@@ -377,6 +481,10 @@ function EditBarangForm({
             berat: parseFloat(berat) || barang.berat,
             quantity: parseInt(quantity, 10) || barang.quantity,
             bisaDitumpuk: stackable,
+            orientable: orientable,
+            fragilityLevel: stackable ? "normal" : "fragile",
+            bottomAxis,
+            bottomFaceIndex,
           })
         }
       >

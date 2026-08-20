@@ -72,6 +72,7 @@ async def strategize_shipment(
             "bentuk_barang": b.bentuk_barang,
             "butuh_pendingin": b.butuh_pendingin,
             "orientable": b.orientable,
+            "bottom_axis": b.bottom_axis,
         }
         for b in daftar_barang
     ]
@@ -248,6 +249,7 @@ def execute_strategy(
                         fragility_level=original.fragility_level,
                         butuh_pendingin=original.butuh_pendingin,
                         orientable=original.orientable,
+                        bottom_axis=original.bottom_axis,
                     )
                     session.add(sub_barang)
             session.flush()
@@ -397,6 +399,8 @@ def get_visualisation(pengiriman_id: int, session: Session = Depends(get_session
                 "posisi_z": item.posisi_z,
                 "orientasi": item.orientasi,
                 "is_fragile": barang.fragility_level != "normal",
+                "bottom_face_index": barang.bottom_face_index,
+                "bottom_axis": barang.bottom_axis,
             })
     return {
         "karoseri": {

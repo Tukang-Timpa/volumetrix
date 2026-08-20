@@ -8,7 +8,7 @@ import { Select } from "../ui/select";
 import { Button } from "../ui/button";
 import { Table, TableBody, TableCell, TableEmpty, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import { ARMADA_LABEL, KAROSERI_LABEL, type Armada, type JenisArmada, type Karoseri } from "../../types";
+import { ARMADA_LABEL, KAROSERI_LABEL, type Armada, type JenisArmada, type Karoseri, type JenisBBM } from "../../types";
 
 const JENIS_OPTIONS = Object.entries(ARMADA_LABEL) as [JenisArmada, string][];
 
@@ -20,6 +20,7 @@ interface ArmadaEdit {
   jumlah: string;
   payload: string;
   bbm: string;
+  jenisBbm: JenisBBM;
 }
 
 /** Berapa unit karoseri yang tersisa setelah dipakai armada lain (opsional: kecuali satu armada tertentu). */
@@ -39,6 +40,7 @@ export function Step2Armada({ onAdvance }: { onAdvance?: () => void }) {
   const [jumlah, setJumlah] = useState("1");
   const [maxPayload, setMaxPayload] = useState("");
   const [konsumsiBbm, setKonsumsiBbm] = useState("");
+  const [jenisBbm, setJenisBbm] = useState<JenisBBM>("solar");
   const [error, setError] = useState<string | null>(null);
   const [edit, setEdit] = useState<ArmadaEdit | null>(null);
   const [editError, setEditError] = useState<string | null>(null);
@@ -65,12 +67,13 @@ export function Step2Armada({ onAdvance }: { onAdvance?: () => void }) {
       }
     }
     setError(null);
-    addArmada({ namaKendaraan: nama.trim(), jenisArmada, karoseriId, jumlah: jml, maxPayload: payload, konsumsiBbm: bbm });
+    addArmada({ namaKendaraan: nama.trim(), jenisArmada, karoseriId, jumlah: jml, maxPayload: payload, konsumsiBbm: bbm, jenisBbm });
     setNama("");
     setKaroseriId("");
     setJumlah("1");
     setMaxPayload("");
     setKonsumsiBbm("");
+    setJenisBbm("solar");
     onAdvance?.();
   };
 
@@ -83,6 +86,7 @@ export function Step2Armada({ onAdvance }: { onAdvance?: () => void }) {
       jumlah: String(Math.max(1, a.jumlah ?? 1)),
       payload: String(a.maxPayload),
       bbm: String(a.konsumsiBbm),
+      jenisBbm: a.jenisBbm || "solar",
     });
     setEditError(null);
   };
@@ -115,6 +119,7 @@ export function Step2Armada({ onAdvance }: { onAdvance?: () => void }) {
       jumlah: jml,
       maxPayload: payload,
       konsumsiBbm: bbm,
+      jenisBbm: edit.jenisBbm,
     });
     setEdit(null);
   };
@@ -167,10 +172,18 @@ export function Step2Armada({ onAdvance }: { onAdvance?: () => void }) {
               <Label htmlFor="jumlah">Jumlah Armada</Label>
               <Input id="jumlah" type="number" min={1} value={jumlah} onChange={(e) => setJumlah(e.target.value)} />
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               <div>
                 <Label htmlFor="payload">Max Payload (kg)</Label>
                 <Input id="payload" type="number" min={0} value={maxPayload} onChange={(e) => setMaxPayload(e.target.value)} />
+              </div>
+              <div>
+                <Label htmlFor="jenisBbm">Jenis BBM</Label>
+                <Select id="jenisBbm" value={jenisBbm} onChange={(e) => setJenisBbm(e.target.value as JenisBBM)}>
+                  <option value="solar">Solar</option>
+                  <option value="pertalite">Pertalite</option>
+                  <option value="other">Other</option>
+                </Select>
               </div>
               <div>
                 <Label htmlFor="bbm">Konsumsi BBM (km/L)</Label>
@@ -218,7 +231,10 @@ export function Step2Armada({ onAdvance }: { onAdvance?: () => void }) {
                       {karoseri ? `${karoseri.id} · ${KAROSERI_LABEL[karoseri.jenis]}` : "—"}
                     </TableCell>
                     <TableCell>{a.maxPayload} kg</TableCell>
-                    <TableCell>{a.konsumsiBbm} km/L</TableCell>
+                    <TableCell>
+                      <div>{a.konsumsiBbm} km/L</div>
+                      <div className="text-[10px] text-neutral-500 uppercase">{a.jenisBbm || "solar"}</div>
+                    </TableCell>
                     <TableCell className="text-right space-x-1.5 whitespace-nowrap">
                       <Dialog open={edit?.id === a.id} onOpenChange={(open) => !open && setEdit(null)}>
                         <DialogTrigger asChild>
@@ -268,7 +284,7 @@ export function Step2Armada({ onAdvance }: { onAdvance?: () => void }) {
                                 onChange={(e) => setEdit((prev) => prev && { ...prev, jumlah: e.target.value })}
                               />
                             </div>
-                            <div className="grid grid-cols-2 gap-2">
+                            <div className="grid grid-cols-3 gap-2">
                               <div>
                                 <Label>Max Payload (kg)</Label>
                                 <Input
@@ -277,6 +293,19 @@ export function Step2Armada({ onAdvance }: { onAdvance?: () => void }) {
                                   value={edit?.payload ?? ""}
                                   onChange={(e) => setEdit((prev) => prev && { ...prev, payload: e.target.value })}
                                 />
+                              </div>
+                              <div>
+                                <Label>Jenis BBM</Label>
+                                <Select
+                                  value={edit?.jenisBbm ?? "solar"}
+                                  onChange={(e) =>
+                                    setEdit((prev) => prev && { ...prev, jenisBbm: e.target.value as JenisBBM })
+                                  }
+                                >
+                                  <option value="solar">Solar</option>
+                                  <option value="pertalite">Pertalite</option>
+                                  <option value="other">Other</option>
+                                </Select>
                               </div>
                               <div>
                                 <Label>Konsumsi BBM (km/L)</Label>
