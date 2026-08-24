@@ -85,9 +85,16 @@ git checkout agent
 ```
 
 ### 2. Environment Variables
-Create a `.env` file inside the `backend/` directory:
+Create a `.env` file in the **root directory** by copying `.env.example`:
 ```bash
-# File: backend/.env
+# On Windows
+copy .env.example .env
+# On Mac/Linux
+cp .env.example .env
+```
+Then, open the `.env` file and fill in your API keys:
+```bash
+# File: .env
 
 # Supabase PostgreSQL Connection String
 DATABASE_URL="postgresql://postgres.[YOUR_PROJECT_REF]:[YOUR_PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres"
@@ -98,16 +105,18 @@ GROQ_API_KEY="gsk_your_groq_api_key_here"
 
 ---
 
-### 3. Running the Backend
+### 3. Running the App (Backend + Frontend)
 
 #### Option A: Using Docker (Highly Recommended)
-This is the easiest way for Frontend Developers to run the backend without worrying about Python dependencies.
+This is the easiest way to run the entire stack (Frontend, Backend, and Ngrok) with a single command.
 
 Run the following command from the **root directory** (`volumetrix/`):
 ```bash
 docker compose up --build -d
 ```
-*The backend will now be running continuously in the background at `http://localhost:8001`.*
+* The **Frontend** will be accessible at `http://localhost:5173`
+* The **Backend** will be accessible at `http://localhost:8001`
+* The **Ngrok Dashboard** will be accessible at `http://localhost:4040`
 
 #### Option B: Manual Local Installation
 If you need to debug or edit the python code directly:
