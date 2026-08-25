@@ -20,6 +20,8 @@ FORMAT OUTPUT WAJIB:
 - semua_muat: (Selalu true jika berasal dari Top 3 Backend).
 - pro & kontra: (Jabarkan secara cerdas!).
 - skor: (1-100, berikan 95+ untuk yang terbaik).
+- estimasi_biaya_bbm: (Ambil angka "Biaya Estimasi" dari input).
+- estimasi_liter_bbm: (Ambil angka "Total Liter" dari input).
 - ringkasan: Jelaskan secara singkat mengapa ranking ini layak.
 
 PENTING:

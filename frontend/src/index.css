@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream-50: #fdfcf9;
+  --color-cream-100: #f5f0e6;
+  --color-cream-200: #ece2cc;
+  --color-cream-300: #ddccaa;
+  --color-cream-400: #c9b183;
+  --color-cream-500: #b39a68;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+@layer base {
+  * {
+    border-color: theme(colors.neutral.800);
+  }
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-neutral-950 text-neutral-100 antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-teal-400) 35%, transparent);
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    height: 4px;
+    border-radius: 9999px;
+    background: theme(colors.neutral.800);
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 14px;
+    width: 14px;
+    border-radius: 9999px;
+    background: var(--color-teal-400);
+    cursor: pointer;
+    border: 2px solid theme(colors.neutral.950);
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: theme(colors.neutral.800);
+    border-radius: 9999px;
+  }
+}

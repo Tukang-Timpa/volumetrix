@@ -29,8 +29,10 @@ class Strategy(BaseModel):
     armada_sequence: List[int] = Field(description="Urutan armada_id yang dipakai (misal: [53, 52]).")
     semua_muat: bool
     skor: int = Field(ge=0, le=100)
-    utilisasi_volume_persen: Optional[float] = None
+    utilisasi_volume_persen: float = Field(0.0, description="Ambil angka 'Overall Vol Util' dari input")
     estimasi_biaya: Optional[str] = None
+    estimasi_biaya_bbm: float = Field(0.0, description="Total pengeluaran biaya BBM dalam Rupiah (hilangkan format koma/titik)")
+    estimasi_liter_bbm: float = Field(0.0, description="Total konsumsi bensin dalam liter")
     pro: List[str]
     kontra: List[str]
     ringkasan: str
@@ -94,6 +96,7 @@ def preprocess_node(state: StrategistState):
             "bentuk_barang": getattr(b, 'bentuk_barang', None),
             "butuh_pendingin": getattr(b, 'butuh_pendingin', False),
             "orientable": getattr(b, 'orientable', True),
+            "bottom_axis": getattr(b, 'bottom_axis', None),
             "loadbear": c.loadbear,
             "level": c.level,
             "base_score": c.base_score,
@@ -159,12 +162,15 @@ def create_auto_strategy_node(db_session):
             b = Barang(
                 id=d["id"], nama_barang=d["nama_barang"], berat=d["berat"],
                 panjang=d["panjang"], lebar=d["lebar"], tinggi=d["tinggi"],
-                orientable=d["orientable"], fragility_level=d["fragility_level"]
+                orientable=d["orientable"], fragility_level=d["fragility_level"],
+                bottom_axis=d.get("bottom_axis"),
+                pengiriman_id=state["pengiriman_id"]
             )
             # Create a mock constraint class matching the interface
             class MockC: pass
             c = MockC()
             c.level = d["level"]
+            c.support_surface_ratio = d.get("support_surface_ratio", 0.8)
             expanded_barang.append((b, c))
             
         # Fetch available fleet and group by unique types
@@ -216,14 +222,17 @@ def create_auto_strategy_node(db_session):
             if valid:
                 combinations.append(combo_instances)
             
-        HARGA_BBM = 6800
-        JARAK_KM = 100.0
+        # Get jarak_km from Pengiriman record, default 100 if null
+        from app.postgresql.schema.pengiriman import Pengiriman
+        pengiriman_record = db_session.get(Pengiriman, state["pengiriman_id"])
+        JARAK_KM = pengiriman_record.jarak_km if pengiriman_record and pengiriman_record.jarak_km else 100.0
             
         successful_strategies = []
         
         for combo in combinations:
             remaining_pairs = expanded_barang.copy()
             total_biaya = 0
+            total_liter_bbm = 0
             results_per_armada = []
             
             for armada in combo:
@@ -254,16 +263,31 @@ def create_auto_strategy_node(db_session):
                 
                 bbm_km = armada.konsumsi_bahan_bakar
                 if bbm_km and bbm_km > 0:
-                    total_biaya += (JARAK_KM / bbm_km) * HARGA_BBM
+                    liter_bbm = JARAK_KM / bbm_km
+                    jenis = (armada.jenis_bbm or "").lower()
+                    if jenis == "solar":
+                        harga_bbm = 6800
+                    elif jenis == "pertalite":
+                        harga_bbm = 10000
+                    else:
+                        harga_bbm = 10000
+                    biaya_bbm = liter_bbm * harga_bbm
+                    total_biaya += biaya_bbm
+                    total_liter_bbm += liter_bbm
+                    # Tambahkan BBM liter ke results untuk prompt LLM
+                    results_per_armada[-1]["bbm_liter"] = round(liter_bbm, 2)
                     
                 remaining_pairs = unfitted_pairs
                 
             if len(remaining_pairs) == 0:
                 # Success! All items fit
                 armada_seq = [a.id for a in combo[:len(results_per_armada)]] # Only count used trucks
+                overall_vol_util = round(sum(d["volume_utility"] for d in results_per_armada) / len(results_per_armada), 1) if results_per_armada else 0
                 successful_strategies.append({
                     "armada_sequence": armada_seq,
                     "biaya": total_biaya,
+                    "liter": total_liter_bbm,
+                    "overall_vol_util": overall_vol_util,
                     "details": results_per_armada
                 })
                 
@@ -280,14 +304,15 @@ def create_auto_strategy_node(db_session):
         top_3 = unique_strategies[:3]
         
         if not top_3:
-            ctx = "SEMUA KOMBINASI (MAKSIMAL 2 TRUK) GAGAL MEMUAT SELURUH BARANG. User perlu menambah armada."
+            ctx = "SEMUA KOMBINASI (MAKSIMAL 2 TRUK) GAGAL MEMUAT SELURUH BARANG. CRITICAL: Berikan skor 0, semua_muat = false, dan beri tahu user untuk mengubah orientasi barang atau menambah armada besar."
         else:
             ctx = "TOP 3 STRATEGI TERMURAH YANG DIJAMIN 100% MUAT (DARI BACKEND):\n"
             for i, s in enumerate(top_3):
-                ctx += f"\nStrategi #{i+1} (Biaya Estimasi: Rp {round(s['biaya']):,})\n"
+                ctx += f"\nStrategi #{i+1} (Biaya Estimasi: Rp {round(s['biaya']):,}, Total Liter: {round(s['liter'], 1)} L, Overall Vol Util: {s.get('overall_vol_util', 0)}%)\n"
                 ctx += f"Armada Sequence: {s['armada_sequence']}\n"
                 for d in s["details"]:
-                    ctx += f"  - {d['armada_name']} (ID {d['armada_id']}): Muat {d['items_fitted']} barang. Vol Util: {d['volume_utility']}%, Wgt Util: {d['weight_utility']}%\n"
+                    bbm_str = f", Konsumsi BBM: {d.get('bbm_liter', 0)} L" if 'bbm_liter' in d else ""
+                    ctx += f"  - {d['armada_name']} (ID {d['armada_id']}): Muat {d['items_fitted']} barang. Vol Util: {d['volume_utility']}%, Wgt Util: {d['weight_utility']}%{bbm_str}\n"
                     
         return {"top_strategies_context": ctx}
     

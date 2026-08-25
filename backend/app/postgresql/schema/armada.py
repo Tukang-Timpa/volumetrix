@@ -1,3 +1,4 @@
+
 from datetime import datetime
 from typing import Optional
 from sqlmodel import SQLModel, Field
@@ -33,6 +34,7 @@ class Armada(SQLModel, table=True):
     karoseri_id: Optional[int] = Field(default=None, foreign_key="karoseri.id")
 
     konsumsi_bahan_bakar: Optional[float] = None  # in liters per km
+    jenis_bbm: Optional[str] = None # solar | pertalite | other
     status: str = Field(default="tersedia")  # tersedia | dipakai | maintenance
 
     img: Optional[str] = None  # path/reference ke gambar kendaraan

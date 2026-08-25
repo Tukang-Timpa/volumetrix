@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from typing import List
 
-from py3dbp import Packer, Bin, Item as PackerItem
+from app.py3dbp.core.main import Packer, Bin, Item as PackerItem
 
 from app.postgresql.schema.armada import Armada, Karoseri
 from app.postgresql.schema.pengiriman import Barang
+from app.py3dbp.core.constants import RotationType
 from app.py3dbp.sorting_engine import build_constraints, sort_packing
 
 @dataclass
@@ -40,13 +41,39 @@ def pack(
     for idx, (barang, constraints) in enumerate(sorted_pairs):
         unique_name = f"{barang.id}::{idx}"
         id_map[unique_name] = barang.id
+        allowed_rotations = set(RotationType.ALL)
+        if not barang.orientable:
+            allowed_rotations.intersection_update([RotationType.RT_WHD])
+            
+        if getattr(barang, 'bottom_axis', None):
+            bottom = barang.bottom_axis
+            if bottom == "tinggi":
+                allowed_rotations.intersection_update([RotationType.RT_WHD, RotationType.RT_HWD])
+            elif bottom == "lebar":
+                allowed_rotations.intersection_update([RotationType.RT_WDH, RotationType.RT_DWH])
+            elif bottom == "panjang":
+                allowed_rotations.intersection_update([RotationType.RT_HDW, RotationType.RT_DHW])
+                
+        if barang.fragility_level in ("fragile", "do_not_stack"):
+            # fragile items shouldn't be laid on their sides randomly if no bottom is specified
+            if not getattr(barang, 'bottom_axis', None):
+                allowed_rotations.intersection_update([RotationType.RT_WHD, RotationType.RT_HWD])
+
+        if not allowed_rotations:
+            allowed_rotations = [RotationType.RT_WHD]
+        else:
+            allowed_rotations = list(allowed_rotations)
+
         packer.add_item(
             PackerItem(
                 unique_name,
                 barang.panjang,
                 barang.lebar,
                 barang.tinggi,
-                barang.berat
+                barang.berat,
+                support_surface_ratio=constraints.support_surface_ratio,
+                allowed_rotations=allowed_rotations,
+                do_not_stack=(barang.fragility_level in ("fragile", "do_not_stack"))
             )
         )
 
